@@ -19,7 +19,6 @@
 #include "theme.h"
 #include "socketapi.h"
 #include "account.h"
-#include "accountmigrator.h"
 #include "accountstate.h"
 
 #ifdef Q_OS_MAC
@@ -198,15 +197,6 @@ int FolderMan::setupFolders()
   //We need to include hidden files just in case the alias starts with '.'
   dir.setFilter(QDir::Files | QDir::Hidden);
   QStringList list = dir.entryList();
-
-  if( list.count() == 0 ) {
-      // maybe the account was just migrated.
-      AccountPtr acc = AccountManager::instance()->account();
-      if ( acc && acc->wasMigrated() ) {
-          AccountMigrator accMig;
-          list = accMig.migrateFolderDefinitons();
-      }
-  }
 
   foreach ( const QString& alias, list ) {
     Folder *f = setupFolderFromConfigFile( alias );

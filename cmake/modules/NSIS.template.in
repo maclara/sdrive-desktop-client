@@ -99,6 +99,7 @@ ReserveFile "${NSISDIR}\Plugins\InstallOptions.dll"
 !include UAC.nsh ;Used by the UAC elevation to install as user or admin.
 !include Library.nsh ;Used by the COM registration for shell extensions
 !include x64.nsh ;Used to determine the right arch for the shell extensions
+!include nsProcess.nsh
 
 ;-----------------------------------------------------------------------------
 ; Memento selections stored in registry.
@@ -243,7 +244,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
 ##############################################################################
 
 Function LaunchApplication
-   ${UAC.CallFunctionAsUser} LaunchApplicationAsUser
+   !insertmacro UAC_AsUser_Call Function LaunchApplicationAsUser ${UAC_SYNCREGISTERS}
 FunctionEnd
 
 Function LaunchApplicationAsUser
@@ -257,7 +258,7 @@ FunctionEnd
 ##############################################################################
 
 !macro CheckForProcess processName gotoWhenFound gotoWhenNotFound
-   Processes::FindProcess ${processName}
+   ${nsProcess::FindProcess} ${processName} $R0
    StrCmp $R0 "0" ${gotoWhenNotFound} ${gotoWhenFound}
 !macroend
 
@@ -267,7 +268,7 @@ FunctionEnd
      /SD IDYES IDYES process_${processName}_kill IDNO process_${processName}_ended
    process_${processName}_kill:
       DetailPrint $ConfirmEndProcess_KILLING_PROCESSES_TEXT
-      Processes::KillProcess ${processName}
+      ${nsProcess::KillProcess} ${processName} $R0
       Sleep 1500
       StrCmp $R0 "1" process_${processName}_ended
       DetailPrint $ConfirmEndProcess_KILL_NOT_FOUND_TEXT
@@ -362,7 +363,7 @@ Function PageLeaveReinstall
       RMDir $INSTDIR
    no_remove_uninstaller:
       StrCmp $R0 "2" 0 +3
-      UAC::Unload
+      # UAC::Unload
       Quit
       BringToFront
    reinst_done:
@@ -417,40 +418,32 @@ Section "${APPLICATION_NAME}" SEC_APPLICATION
    File "${QT_DLL_PATH}\Qt5Core.dll"
    File "${QT_DLL_PATH}\Qt5Gui.dll"
    File "${QT_DLL_PATH}\Qt5Network.dll"
-   File "${QT_DLL_PATH}\Qt5OpenGL.dll"
    File "${QT_DLL_PATH}\Qt5PrintSupport.dll"
    File "${QT_DLL_PATH}\Qt5Qml.dll"
-   File "${QT_DLL_PATH}\Qt5Quick.dll"
    File "${QT_DLL_PATH}\Qt5Sql.dll"
-   File "${QT_DLL_PATH}\Qt5WebKit.dll"
-   File "${QT_DLL_PATH}\Qt5WebKitWidgets.dll"
    File "${QT_DLL_PATH}\Qt5Widgets.dll"
    File "${QT_DLL_PATH}\Qt5Xml.dll"
 
-   ;QtWebKit dependencies
-   File "${QT_DLL_PATH}\Qt5Multimedia.dll"
-   File "${QT_DLL_PATH}\Qt5MultimediaWidgets.dll"
-   File "${QT_DLL_PATH}\Qt5Sensors.dll"
-
    ;Qt deps
    File "${MING_BIN}\libpng16-16.dll"
-   File "${MING_BIN}\icudata53.dll"
-   File "${MING_BIN}\icui18n53.dll"
-   File "${MING_BIN}\icuuc53.dll"
-   File "${MING_BIN}\libEGL.dll"
-   File "${MING_BIN}\libGLESv2.dll"
+   File "${MING_BIN}\icudata56.dll"
+   File "${MING_BIN}\icui18n56.dll"
+   File "${MING_BIN}\icuuc56.dll"
    File "${MING_BIN}\libjpeg-8.dll"
    File "${MING_BIN}\libpcre16-0.dll"
-   File "${MING_BIN}\libproxy.dll"
    File "${MING_BIN}\libsqlite3-0.dll"
    File "${MING_BIN}\libcrypto-10.dll"
    File "${MING_BIN}\libssl-10.dll"
    File "${MING_BIN}\libstdc++-6.dll"
-   File "${MING_BIN}\libwebp-4.dll"
+   File "${MING_BIN}\libwebp-5.dll"
    File "${MING_BIN}\libxslt-1.dll"
    File "${MING_BIN}\libxml2-2.dll"
    File "${MING_BIN}\zlib1.dll"
    File "${MING_BIN}\libsqlite3-0.dll"
+   File "${MING_BIN}\libharfbuzz-0.dll"
+   File "${MING_BIN}\libglib-2.0-0.dll"
+   File "${MING_BIN}\libfreetype-6.dll"
+   File "${MING_BIN}\libintl-8.dll"
 
    ;QtKeyChain stuff
    File "${MING_BIN}\libqt5keychain.dll"
@@ -758,7 +751,7 @@ Function .onInit
    ${MementoSectionRestore}
 
    UAC_Elevate:
-      UAC::RunElevated
+      !insertmacro UAC_RunElevated
       StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
       StrCmp 0 $0 0 UAC_Err ; Error?
       StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
@@ -806,11 +799,11 @@ Function .onInstSuccess
    ${AndIf} $InstallRunIfSilent == "yes"
      Call LaunchApplication
    ${EndIf}
-   UAC::Unload ;Must call unload!
+   # UAC::Unload ;Must call unload!
 FunctionEnd
 
 Function .onInstFailed
-   UAC::Unload ;Must call unload!
+   # UAC::Unload ;Must call unload!
 FunctionEnd
 
 ##############################################################################
@@ -823,7 +816,7 @@ Function un.onInit
    Call un.SetLang
 
    UAC_Elevate:
-      UAC::RunElevated
+      !insertmacro UAC_RunElevated
       StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
       StrCmp 0 $0 0 UAC_Err ; Error?
       StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
@@ -854,9 +847,9 @@ Function un.onInit
 FunctionEnd
 
 Function un.onUnInstSuccess
-   UAC::Unload ;Must call unload!
+   # UAC::Unload ;Must call unload!
 FunctionEnd
 
 Function un.onUnInstFailed
-   UAC::Unload ;Must call unload!
+   # UAC::Unload ;Must call unload!
 FunctionEnd

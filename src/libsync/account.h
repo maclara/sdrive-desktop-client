@@ -108,12 +108,6 @@ public:
     /** Returns webdav entry URL, based on url() */
     QUrl davUrl() const;
 
-    /** set and retrieve the migration flag: if an account of a branded
-     *  client was migrated from a former ownCloud Account, this is true
-     */
-    void setMigrated(bool mig);
-    bool wasMigrated();
-
     QList<QNetworkCookie> lastAuthCookies() const;
 
     QNetworkReply* headRequest(const QString &relPath);
@@ -149,11 +143,6 @@ public:
 
     void setCertificate(const QByteArray certficate = QByteArray(), const QString privateKey = QString());
 
-    void setCapabilities(const QVariantMap &caps);
-    QVariantMap capabilities();
-    void setServerVersion(const QString &version);
-    QString serverVersion();
-
     void clearCookieJar();
 
     QNetworkAccessManager* networkAccessManager();
@@ -178,8 +167,6 @@ private:
     QUrl _url;
     QList<QSslCertificate> _approvedCerts;
     QSslConfiguration _sslConfiguration;
-    QVariantMap _capabilities;
-    QString _serverVersion;
     QScopedPointer<AbstractSslErrorHandler> _sslErrorHandler;
     QuotaInfo *_quotaInfo;
     QNetworkAccessManager *_am;
@@ -189,8 +176,7 @@ private:
     static QString _configFileName;
     QByteArray _pemCertificate; 
     QString _pemPrivateKey;  
-    QString _davPath; // default "remote.php/webdav/";
-    bool _wasMigrated;
+    QString _davPath; // default "/", will have <user> appended to it
 };
 
 }

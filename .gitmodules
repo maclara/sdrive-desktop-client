@@ -3,10 +3,13 @@
 	url = https://github.com/owncloud/documentation
 [submodule "src/3rdparty/qtmacgoodies"]
 	path = src/3rdparty/qtmacgoodies
-	url = git://github.com/shadone/qtmacgoodies.git
+	url = https://gitlab.com/shadone/qtmacgoodies.git
 [submodule "binary"]
 	path = binary
-	url = git://github.com/owncloud/owncloud-client-binary.git
+	url = https://github.com/owncloud/owncloud-client-binary.git
 [submodule "src/3rdparty/libcrashreporter-qt"]
 	path = src/3rdparty/libcrashreporter-qt
-	url = git://github.com/dschmidt/libcrashreporter-qt.git
+	url = https://github.com/dschmidt/libcrashreporter-qt.git
+[submodule "qtkeychain"]
+	path = SwissDisk/qtkeychain
+	url = https://github.com/frankosterfeld/qtkeychain.git

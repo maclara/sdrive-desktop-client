@@ -1,0 +1,14 @@
+Source: swissdisk-client
+Section: web
+Priority: optional
+Maintainer: Ben Collins <bcollins@maclara-llc.com>
+Build-Depends: qt5-default, qt5keychain-dev, cmake, libqt5webkit5-dev,
+ qttools5-dev-tools, libssl-dev, libneon27-dev, debhelper
+Standards-Version: 3.9.6
+Homepage: http://www.swissdisk.com/
+
+Package: swissdisk-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Desktop and CLI tool for syncing a local folder with a SwissDisk.com account
+ Enable syncing a local folder with a remote SwissDisk.com account.

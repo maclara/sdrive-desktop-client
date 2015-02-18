@@ -73,8 +73,7 @@ Account::Account(QObject *parent)
     , _am(0)
     , _credentials(0)
     , _treatSslErrorsAsFailure(false)
-    , _davPath("remote.php/webdav/")
-    , _wasMigrated(false)
+    , _davPath("/")
 {
     qRegisterMetaType<AccountPtr>("AccountPtr");
 }
@@ -135,70 +134,36 @@ AccountPtr Account::restore()
 {
     // try to open the correctly themed settings
     QScopedPointer<QSettings> settings(settingsWithGroup(Theme::instance()->appName()));
-
     AccountPtr acc;
-    bool migratedCreds = false;
+    QString dav_path("/");
 
-    // if the settings file could not be opened, the childKeys list is empty
-    if( settings->childKeys().isEmpty() ) {
-        // Now try to open the original ownCloud settings to see if they exist.
-        QString oCCfgFile = QDir::fromNativeSeparators( settings->fileName() );
-        // replace the last two segments with ownCloud/owncloud.cfg
-        oCCfgFile = oCCfgFile.left( oCCfgFile.lastIndexOf('/'));
-        oCCfgFile = oCCfgFile.left( oCCfgFile.lastIndexOf('/'));
-        oCCfgFile += QLatin1String("/ownCloud/owncloud.cfg");
+    if (settings->childKeys().isEmpty())
+        return AccountPtr();
 
-        qDebug() << "Migrate: checking old config " << oCCfgFile;
+    acc = AccountPtr(new Account);
+    acc->setSharedThis(acc);
 
-        QFileInfo fi( oCCfgFile );
-        if( fi.isReadable() ) {
-            QSettings *oCSettings = new QSettings(oCCfgFile, QSettings::IniFormat);
-            oCSettings->beginGroup(QLatin1String("ownCloud"));
+    acc->setUrl(settings->value(QLatin1String(urlC)).toUrl());
+    acc->setCredentials(CredentialsFactory::create(settings->value(QLatin1String(authTypeC)).toString()));
 
-            // Check the theme url to see if it is the same url that the oC config was for
-            QString overrideUrl = Theme::instance()->overrideServerUrl();
-            if( !overrideUrl.isEmpty() ) {
-                if (overrideUrl.endsWith('/')) { overrideUrl.chop(1); }
-                QString oCUrl = oCSettings->value(QLatin1String(urlC)).toString();
-                if (oCUrl.endsWith('/')) { oCUrl.chop(1); }
+    // We want to only restore settings for that auth type and the user value
+    acc->_settingsMap.insert(QLatin1String(userC), settings->value(userC));
 
-                // in case the urls are equal reset the settings object to read from
-                // the ownCloud settings object
-                qDebug() << "Migrate oC config if " << oCUrl << " == " << overrideUrl << ":"
-                         << (oCUrl == overrideUrl ? "Yes" : "No");
-                if( oCUrl == overrideUrl ) {
-                    migratedCreds = true;
-                    settings.reset( oCSettings );
-                } else {
-                    delete oCSettings;
-                }
-            }
-        }
+    dav_path.append(settings->value(userC).toString());
+    acc->setDavPath(dav_path);
+
+    QString authTypePrefix = settings->value(authTypeC).toString() + "_";
+    Q_FOREACH(QString key, settings->childKeys()) {
+        if (!key.startsWith(authTypePrefix))
+            continue;
+        acc->_settingsMap.insert(key, settings->value(key));
     }
 
-    if (!settings->childKeys().isEmpty()) {
-        acc = AccountPtr(new Account);
-        acc->setSharedThis(acc);
+    // now the cert, it is in the general group
+    settings->beginGroup(QLatin1String("General"));
+    acc->setApprovedCerts(QSslCertificate::fromData(settings->value(caCertsKeyC).toByteArray()));
 
-        acc->setUrl(settings->value(QLatin1String(urlC)).toUrl());
-        acc->setCredentials(CredentialsFactory::create(settings->value(QLatin1String(authTypeC)).toString()));
-
-        // We want to only restore settings for that auth type and the user value
-        acc->_settingsMap.insert(QLatin1String(userC), settings->value(userC));
-        QString authTypePrefix = settings->value(authTypeC).toString() + "_";
-        Q_FOREACH(QString key, settings->childKeys()) {
-            if (!key.startsWith(authTypePrefix))
-                continue;
-            acc->_settingsMap.insert(key, settings->value(key));
-        }
-
-        // now the cert, it is in the general group
-        settings->beginGroup(QLatin1String("General"));
-        acc->setApprovedCerts(QSslCertificate::fromData(settings->value(caCertsKeyC).toByteArray()));
-        acc->setMigrated(migratedCreds);
-        return acc;
-    }
-    return AccountPtr();
+    return acc;
 }
 
 static bool isEqualExceptProtocol(const QUrl &url1, const QUrl &url2)
@@ -488,36 +453,6 @@ void Account::handleInvalidCredentials()
     }
 
     emit invalidCredentials();
-}
-
-bool Account::wasMigrated()
-{
-    return _wasMigrated;
-}
-
-void Account::setMigrated(bool mig)
-{
-    _wasMigrated = mig;
-}
-
-QVariantMap Account::capabilities()
-{
-    return _capabilities;
-}
-
-void Account::setCapabilities(const QVariantMap &caps)
-{
-    _capabilities = caps;
-}
-
-QString Account::serverVersion()
-{
-    return _serverVersion;
-}
-
-void Account::setServerVersion(const QString& version)
-{
-    _serverVersion = version;
 }
 
 } // namespace OCC

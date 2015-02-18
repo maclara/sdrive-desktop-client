@@ -252,7 +252,7 @@ CSYNC_EXCLUDE_TYPE csync_excluded_no_ctx(c_strlist_t *excludes, const char *path
   }
 #endif
 
-  rc = csync_fnmatch(".owncloudsync.log*", bname, 0);
+  rc = csync_fnmatch(".swissdisksync.log*", bname, 0);
   if (rc == 0) {
       match = CSYNC_FILE_SILENTLY_EXCLUDED;
       SAFE_FREE(bname);

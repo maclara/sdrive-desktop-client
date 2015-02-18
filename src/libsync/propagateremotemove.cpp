@@ -66,23 +66,6 @@ void PropagateRemoteMove::start()
         finalize();
         return;
     }
-    if (_item._file == QLatin1String("Shared") ) {
-        // Before owncloud 7, there was no permissions system. At the time all the shared files were
-        // in a directory called "Shared" and were not supposed to be moved, otherwise bad things happens
-
-        QString versionString = _propagator->account()->serverVersion();
-        if (versionString.contains('.') && versionString.split('.')[0].toInt() < 7) {
-            QString originalFile(_propagator->getFilePath(QLatin1String("Shared")));
-            _propagator->addTouchedFile(originalFile);
-            _propagator->addTouchedFile(targetFile);
-            if( QFile::rename( targetFile, originalFile) ) {
-                done(SyncFileItem::NormalError, tr("This folder must not be renamed. It is renamed back to its original name."));
-            } else {
-                done(SyncFileItem::NormalError, tr("This folder must not be renamed. Please name it back to Shared."));
-            }
-            return;
-        }
-    }
 
     _job = new MoveJob(_propagator->account(),
                         _propagator->_remoteFolder + _item._file,

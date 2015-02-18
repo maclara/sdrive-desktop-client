@@ -71,7 +71,7 @@ void PropagateRemoteMkdir::slotMkcolJobFinished()
 
     _item._requestDuration = _job->duration();
     _item._responseTimeStamp = _job->responseTimestamp();
-    _item._fileId = _job->reply()->rawHeader("OC-FileId");
+    _item._fileId = _job->reply()->rawHeader("X-SwissDisk-FileId");
 
     if (_item._fileId.isEmpty()) {
         // Owncloud 7.0.0 and before did not have a header with the file id.
@@ -81,7 +81,7 @@ void PropagateRemoteMkdir::slotMkcolJobFinished()
         // while files are still uploading
         _propagator->_activeJobs++;
         auto propfindJob = new PropfindJob(_job->account(), _job->path(), this);
-        propfindJob->setProperties(QList<QByteArray>() << "getetag" << "http://owncloud.org/ns:id");
+        propfindJob->setProperties(QList<QByteArray>() << "getetag" << "http://swissdisk.com/dav/props/:id");
         QObject::connect(propfindJob, SIGNAL(result(QVariantMap)), this, SLOT(propfindResult(QVariantMap)));
         QObject::connect(propfindJob, SIGNAL(finishedWithError()), this, SLOT(propfindError()));
         propfindJob->start();

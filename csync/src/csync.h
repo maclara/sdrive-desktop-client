@@ -143,7 +143,7 @@ enum csync_ftw_type_e {
 };
 
 
-#define FILE_ID_BUF_SIZE 21
+#define FILE_ID_BUF_SIZE 42
 
 // currently specified at https://github.com/owncloud/core/issues/8322 are 9 to 10
 #define REMOTE_PERM_BUF_SIZE 15

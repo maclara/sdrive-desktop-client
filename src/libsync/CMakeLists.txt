@@ -78,10 +78,6 @@ else()
     set (libsync_SRCS
         ${libsync_SRCS}
         creds/httpcredentials.cpp
-        creds/shibbolethcredentials.cpp
-        creds/shibboleth/shibbolethwebview.cpp
-        creds/shibboleth/shibbolethrefresher.cpp
-        creds/shibboleth/shibbolethuserjob.cpp
         authenticationdialog.cpp
     )
 endif()
@@ -153,7 +149,7 @@ GENERATE_EXPORT_HEADER( ${synclib_NAME}
 if(TOKEN_AUTH_ONLY)
     qt5_use_modules(${synclib_NAME} Network Xml Sql)
 else()
-    qt5_use_modules(${synclib_NAME} Widgets Network Xml WebKitWidgets Sql)
+    qt5_use_modules(${synclib_NAME} Widgets Network Xml Sql)
 endif()
 
 set_target_properties( ${synclib_NAME}  PROPERTIES

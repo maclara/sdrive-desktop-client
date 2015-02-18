@@ -26,11 +26,8 @@ namespace OCC {
 /**
  * This is a job-like class to check that the server is up and that we are connected.
  * There is two entry point: checkServerAndAuth and checkAuthentication
- * checkAutentication is the quick version that only do the propfind
- * while checkServerAndAuth is doing the 3 calls.
- *
- * We cannot use the capabilites call to test the login and the password because of
- * https://github.com/owncloud/core/issues/12930
+ * checkAutentication is the quick version that only does the propfind
+ * while checkServerAndAuth is doing the 2 calls.
  *
  * Here follows the state machine
 
@@ -52,14 +49,7 @@ namespace OCC {
         |
         +-> slotAuthFailed --> X
         |
-        +-> slotAuthSuccess --+--> X (depending if comming from checkServerAndAuth or not)
-                              |
-  +---------------------------+
-  |
-  +-> checkServerCapabilities (cloud/capabilities)
-        JsonApiJob
-        |
-        +-> slotCapabilitiesRecieved --> X
+        +-> slotAuthSuccess --> X
  */
 class OWNCLOUDSYNC_EXPORT ConnectionValidator : public QObject
 {
@@ -92,22 +82,18 @@ signals:
     void connectionResult( ConnectionValidator::Status status, QStringList errors );
 
 protected slots:
-    void slotStatusFound(const QUrl&url, const QVariantMap &info);
+    void slotStatusFound(const QUrl&url);
     void slotNoStatusFound(QNetworkReply *reply);
     void slotJobTimeout(const QUrl& url);
 
     void slotAuthFailed(QNetworkReply *reply);
     void slotAuthSuccess();
 
-    void slotCapabilitiesRecieved(const QVariantMap&);
-
 private:
     void reportResult(Status status);
-    void checkServerCapabilities();
 
     QStringList _errors;
     AccountPtr   _account;
-    bool _isCheckingServerAndAuth;
 };
 
 }

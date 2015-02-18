@@ -2750,23 +2750,23 @@ We adviseren deze site niet te gebruiken.</translation>
     <name>Utility</name>
     <message>
         <location filename="../src/libsync/utility.cpp" line="113"/>
-        <source>%L1 TiB</source>
-        <translation>%L1 TiB</translation>
+        <source>%L1 TB</source>
+        <translation>%L1 TB</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="116"/>
-        <source>%L1 GiB</source>
-        <translation>%L1 GiB</translation>
+        <source>%L1 GB</source>
+        <translation>%L1 GB</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="119"/>
-        <source>%L1 MiB</source>
-        <translation>%L1 MiB</translation>
+        <source>%L1 MB</source>
+        <translation>%L1 MB</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="122"/>
-        <source>%L1 KiB</source>
-        <translation>%L1 KiB</translation>
+        <source>%L1 KB</source>
+        <translation>%L1 KB</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="125"/>

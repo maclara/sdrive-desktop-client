@@ -17,6 +17,7 @@
 
 #include "syncresult.h"
 
+#include <QObject>
 
 class QIcon;
 class QString;

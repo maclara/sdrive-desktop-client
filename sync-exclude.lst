@@ -7,7 +7,7 @@
 *csync_timedif.ctmp*
 .csync_journal.db
 .csync_journal.db.ctmp
-.owncloudsync.log
+.swissdisksync.log
 
 .*.sw?
 .*.*sw?
@@ -39,3 +39,5 @@ desktop.ini
 *.tmp
 
 *.gnucash.tmp-*
+
+lost+found

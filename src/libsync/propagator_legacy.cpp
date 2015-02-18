@@ -343,7 +343,7 @@ void PropagateUploadFileLegacy::notify_status_cb(void* userdata, ne_session_stat
 static QByteArray parseFileId(ne_request *req) {
     QByteArray fileId;
 
-    const char *header = ne_get_response_header(req, "OC-FileId");
+    const char *header = ne_get_response_header(req, "X-SwissDisk-FileId");
     if( header ) {
         fileId = header;
     }

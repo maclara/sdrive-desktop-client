@@ -2752,23 +2752,23 @@ Il est déconseillé de l&apos;utiliser.</translation>
     <name>Utility</name>
     <message>
         <location filename="../src/libsync/utility.cpp" line="113"/>
-        <source>%L1 TiB</source>
-        <translation>%L1 Tio</translation>
+        <source>%L1 TB</source>
+        <translation>%L1 To</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="116"/>
-        <source>%L1 GiB</source>
-        <translation>%L1 Gio</translation>
+        <source>%L1 GB</source>
+        <translation>%L1 Go</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="119"/>
-        <source>%L1 MiB</source>
-        <translation>%L1 Mio</translation>
+        <source>%L1 MB</source>
+        <translation>%L1 Mo</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="122"/>
-        <source>%L1 KiB</source>
-        <translation>%L1 Kio</translation>
+        <source>%L1 KB</source>
+        <translation>%L1 Ko</translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="125"/>

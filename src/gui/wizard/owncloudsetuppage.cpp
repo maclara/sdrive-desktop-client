@@ -50,10 +50,6 @@ OwncloudSetupPage::OwncloudSetupPage(QWidget *parent)
     setTitle(WizardCommon::titleTemplate().arg(tr("Connect to %1").arg(theme->appNameGUI())));
     setSubTitle(WizardCommon::subTitleTemplate().arg(tr("Setup %1 server").arg(theme->appNameGUI())));
 
-    if (!theme->overrideServerUrl().isEmpty()) {
-        _ui.leUrl->setEnabled(false);
-    }
-
     registerField( QLatin1String("OCUrl*"), _ui.leUrl );
 
     _ui.resultLayout->addWidget( _progressIndi );
@@ -152,18 +148,8 @@ void OwncloudSetupPage::initializePage()
     if (pushButton)
         pushButton->setDefault(true);
 
-    // If url is overriden by theme, it's already set and
-    // we just check the server type and switch to second page
-    // immediately.
-    if (Theme::instance()->overrideServerUrl().isEmpty()) {
-        _ui.leUrl->setFocus();
-    } else {
-        setCommitPage(true);
-        // Hack: setCommitPage() changes caption, but after an error this page could still be visible
-        setButtonText(QWizard::CommitButton, tr("&Next >"));
-        validatePage();
-        setVisible(false);
-    }
+    _ui.leUrl->setFocus();
+    _ui.leUrl->setText(Theme::instance()->overrideServerUrl());
 }
 
 bool OwncloudSetupPage::urlHasChanged()
@@ -192,11 +178,7 @@ bool OwncloudSetupPage::urlHasChanged()
 
 int OwncloudSetupPage::nextId() const
 {
-    if (_authType == WizardCommon::HttpCreds) {
-        return WizardCommon::Page_HttpCreds;
-    } else {
-        return WizardCommon::Page_ShibbolethCreds;
-    }
+    return WizardCommon::Page_HttpCreds;
 }
 
 QString OwncloudSetupPage::url() const

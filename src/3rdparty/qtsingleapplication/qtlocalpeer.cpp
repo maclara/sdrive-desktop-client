@@ -29,6 +29,7 @@
 
 #include "qtlocalpeer.h"
 
+#include <QDataStream>
 #include <QCoreApplication>
 #include <QTime>
 

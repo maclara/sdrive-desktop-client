@@ -317,13 +317,13 @@ static int _hbf_dav_request(hbf_transfer_t *transfer, ne_request *req, int fd, h
             }
 
             /* check if the server was able to set the mtime already. */
-            etag = ne_get_response_header(req, "X-OC-MTime");
+            etag = ne_get_response_header(req, "X-SwissDisk-MTime");
             if( etag && strcmp(etag, "accepted") == 0 ) {
                 /* the server acknowledged that the mtime was set. */
                 transfer->modtime_accepted = 1;
             }
 
-            etag = ne_get_response_header(req, "OC-FileID");
+            etag = ne_get_response_header(req, "X-SwissDisk-FileId");
             if( etag ) {
                 transfer->file_id = strdup( etag );
             }

@@ -32,7 +32,6 @@ void initErrorLabel(QLabel* errorLabel);
 
 enum AuthType {
     HttpCreds,
-    Shibboleth
 };
 
 enum SyncMode {
@@ -43,7 +42,6 @@ enum SyncMode {
 enum Pages {
     Page_ServerSetup,
     Page_HttpCreds,
-    Page_ShibbolethCreds,
     Page_AdvancedSetup,
     Page_Result
 };

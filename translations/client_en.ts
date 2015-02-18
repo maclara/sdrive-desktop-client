@@ -2745,22 +2745,22 @@ It is not advisable to use it.</source>
     <name>Utility</name>
     <message>
         <location filename="../src/libsync/utility.cpp" line="113"/>
-        <source>%L1 TiB</source>
+        <source>%L1 TB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="116"/>
-        <source>%L1 GiB</source>
+        <source>%L1 GB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="119"/>
-        <source>%L1 MiB</source>
+        <source>%L1 MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/libsync/utility.cpp" line="122"/>
-        <source>%L1 KiB</source>
+        <source>%L1 KB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

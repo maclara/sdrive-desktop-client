@@ -68,7 +68,7 @@ signals:
 
 private slots:
     void slotDetermineAuthType(const QString&);
-    void slotOwnCloudFoundAuth(const QUrl&, const QVariantMap&);
+    void slotOwnCloudFoundAuth(const QUrl&);
     void slotNoOwnCloudFoundAuth(QNetworkReply *reply);
     void slotNoOwnCloudFoundAuthTimeout(const QUrl&url);
 

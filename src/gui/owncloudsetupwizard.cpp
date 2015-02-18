@@ -149,29 +149,19 @@ void OwncloudSetupWizard::slotDetermineAuthType(const QString &urlString)
     account->setCredentials(CredentialsFactory::create("dummy"));
     CheckServerJob *job = new CheckServerJob(_ocWizard->account(), this);
     job->setIgnoreCredentialFailure(true);
-    connect(job, SIGNAL(instanceFound(QUrl,QVariantMap)), SLOT(slotOwnCloudFoundAuth(QUrl,QVariantMap)));
+    connect(job, SIGNAL(instanceFound(QUrl)), SLOT(slotOwnCloudFoundAuth(QUrl)));
     connect(job, SIGNAL(instanceNotFound(QNetworkReply*)), SLOT(slotNoOwnCloudFoundAuth(QNetworkReply*)));
     connect(job, SIGNAL(timeout(const QUrl&)), SLOT(slotNoOwnCloudFoundAuthTimeout(const QUrl&)));
     job->setTimeout(10*1000);
     job->start();
 }
 
-void OwncloudSetupWizard::slotOwnCloudFoundAuth(const QUrl& url, const QVariantMap &info)
+void OwncloudSetupWizard::slotOwnCloudFoundAuth(const QUrl& url)
 {
-    _ocWizard->appendToConfigurationLog(tr("<font color=\"green\">Successfully connected to %1: %2 version %3 (%4)</font><br/><br/>")
-                                        .arg(url.toString())
-                                        .arg(Theme::instance()->appNameGUI())
-                                        .arg(CheckServerJob::versionString(info))
-                                        .arg(CheckServerJob::version(info)));
+    _ocWizard->appendToConfigurationLog(tr("<font color=\"green\">Successfully connected to %1</font><br/><br/>")
+                                        .arg(url.toString()));
 
     QString p = url.path();
-    if (p.endsWith("/status.php")) {
-        // We might be redirected, update the account
-        QUrl redirectedUrl = url;
-        redirectedUrl.setPath(url.path().left(url.path().length() - 11));
-        _ocWizard->account()->setUrl(redirectedUrl);
-        qDebug() << Q_FUNC_INFO << " was redirected to" << redirectedUrl.toString();
-    }
 
     DetermineAuthTypeJob *job = new DetermineAuthTypeJob(_ocWizard->account(), this);
     job->setIgnoreCredentialFailure(true);
@@ -197,9 +187,12 @@ void OwncloudSetupWizard::slotNoOwnCloudFoundAuthTimeout(const QUrl&url)
 
 void OwncloudSetupWizard::slotConnectToOCUrl( const QString& url )
 {
+    QString dav_path("/");
     qDebug() << "Connect to url: " << url;
     AbstractCredentials *creds = _ocWizard->getCredentials();
     _ocWizard->account()->setCredentials(creds);
+    dav_path.append(creds->user());
+    _ocWizard->account()->setDavPath(dav_path);
     _ocWizard->setField(QLatin1String("OCUrl"), url );
     _ocWizard->appendToConfigurationLog(tr("Trying to connect to %1 at %2...")
                                         .arg( Theme::instance()->appNameGUI() ).arg(url) );
@@ -255,9 +248,6 @@ void OwncloudSetupWizard::slotConnectionCheck(QNetworkReply* reply)
                     .arg(_ocWizard->account()->url().toString());
         }
         _ocWizard->show();
-        if (_ocWizard->currentId() == WizardCommon::Page_ShibbolethCreds) {
-            _ocWizard->back();
-        }
         _ocWizard->displayError(msg, _ocWizard->currentId() == WizardCommon::Page_ServerSetup && checkDowngradeAdvised(reply));
         break;
     }
@@ -520,16 +510,9 @@ bool DetermineAuthTypeJob::finished()
         setReply(getRequest(redirection));
         setupConnections(reply());
     } else {
-        QRegExp shibbolethyWords("SAML|wayf");
-
-        shibbolethyWords.setCaseSensitivity(Qt::CaseInsensitive);
-        if (redirection.toString().contains(shibbolethyWords)) {
-            emit authType(WizardCommon::Shibboleth);
-        } else {
-            // TODO: Send an error.
-            // eh?
-            emit authType(WizardCommon::HttpCreds);
-        }
+        // TODO: Send an error.
+        // eh?
+        emit authType(WizardCommon::HttpCreds);
     }
     return true;
 }

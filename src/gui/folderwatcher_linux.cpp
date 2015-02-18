@@ -170,7 +170,7 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
             QByteArray fileName(event->name);
             // qDebug() << Q_FUNC_INFO << event->name;
             if (fileName.startsWith(".csync_journal.db") ||
-                    fileName.startsWith(".owncloudsync.log")) {
+                    fileName.startsWith(".swissdisksync.log")) {
                 // qDebug() << "ignore journal";
             } else {
                 const QString p = _watches[event->wd] + '/' + fileName;

@@ -193,21 +193,14 @@ public:
     explicit CheckServerJob(AccountPtr account, QObject *parent = 0);
     void start() Q_DECL_OVERRIDE;
 
-    static QString version(const QVariantMap &info);
-    static QString versionString(const QVariantMap &info);
-    static bool installed(const QVariantMap &info);
-
 signals:
-    void instanceFound(const QUrl&url, const QVariantMap &info);
+    void instanceFound(const QUrl&url);
     void instanceNotFound(QNetworkReply *reply);
     void timeout(const QUrl&url);
 
 private slots:
     virtual bool finished() Q_DECL_OVERRIDE;
     virtual void slotTimeout() Q_DECL_OVERRIDE;
-
-private:
-    bool _subdirFallback;
 };
 
 

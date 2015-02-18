@@ -25,7 +25,6 @@ namespace OCC {
 
 class OwncloudSetupPage;
 class OwncloudHttpCredsPage;
-class OwncloudShibbolethCredsPage;
 class OwncloudAdvancedSetupPage;
 class OwncloudWizardResultPage;
 class AbstractCredentials;
@@ -87,7 +86,6 @@ private:
     AccountPtr _account;
     OwncloudSetupPage* _setupPage;
     OwncloudHttpCredsPage* _httpCredsPage;
-    OwncloudShibbolethCredsPage* _shibbolethCredsPage;
     OwncloudAdvancedSetupPage* _advancedSetupPage;
     OwncloudWizardResultPage* _resultPage;
     AbstractCredentialsWizardPage* _credentialsPage;

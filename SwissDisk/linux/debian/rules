@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --sourcedirectory="$(PWD)/../.." --builddirectory="$(PWD)/build"
+
+override_dh_auto_configure:
+	dh_auto_configure --buildsystem=cmake -- \
+		-DOEM_THEME_DIR="$(PWD)/.."
+
+override_dh_install:
+	dh_install
+	rm -rf debian/swissdisk-client/usr/include debian/swissdisk-client/etc
+	find debian/swissdisk-client -name \*.so | xargs rm -f

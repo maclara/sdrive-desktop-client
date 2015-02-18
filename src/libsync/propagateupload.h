@@ -30,7 +30,7 @@ public:
     ~UploadDevice();
 
     /** Reads the data from the file and opens the device */
-    bool prepareAndOpen(const QString& fileName, qint64 start, qint64 size);
+    bool prepareAndOpen(const QString& fileName);
 
     qint64 writeData(const char* , qint64 ) Q_DECL_OVERRIDE;
     qint64 readData(char* data, qint64 maxlen) Q_DECL_OVERRIDE;
@@ -47,10 +47,10 @@ public:
     void giveBandwidthQuota(qint64 bwq);
 private:
 
-    // The file data
-    QByteArray _data;
-    // Position in the data
-    qint64 _read;
+    // Position in the data and total filesize
+    qint64 _read, _filesize;
+    // The file we are reading from
+    QFile file;
 
     // Bandwidth manager related
     QPointer<BandwidthManager> _bandwidthManager;
@@ -123,13 +123,6 @@ signals:
 
 class PropagateUploadFileQNAM : public PropagateItemJob {
     Q_OBJECT
-    int _startChunk;
-    int _currentChunk;
-    int _chunkCount;
-    int _transferId;
-    QElapsedTimer _duration;
-    QVector<PUTFileJob*> _jobs;
-    bool _finished; // Tells that all the jobs have been finished
 public:
     PropagateUploadFileQNAM(OwncloudPropagator* propagator,const SyncFileItem& item)
         : PropagateItemJob(propagator, item), _startChunk(0), _currentChunk(0), _chunkCount(0), _transferId(0), _finished(false) {}
@@ -143,6 +136,13 @@ private slots:
     void finalize(const SyncFileItem&);
     void slotJobDestroyed(QObject *job);
 private:
+    int _startChunk;
+    int _currentChunk;
+    int _transferId;
+    int _chunkCount;
+    QElapsedTimer _duration;
+    QVector<PUTFileJob*> _jobs;
+    bool _finished; // Tells that all the jobs have been finished
     void startPollJob(const QString& path);
     void abortWithError(SyncFileItem::Status status, const QString &error);
 };

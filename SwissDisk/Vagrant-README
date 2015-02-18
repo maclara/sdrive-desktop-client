@@ -1,0 +1,35 @@
+Download and install Vagrant for your OS (you need at least v1.5)
+
+	https://www.vagrantup.com/downloads.html
+
+Next, make sure to install VirtualBox (Ubuntu users can install virtualbox via
+apt-get):
+
+	https://www.virtualbox.org/wiki/Downloads
+
+After this is complete, you are ready to go. From a cmd line shell, cd into the
+sdrive git repo and run this command:
+
+	vagrant up
+
+This will download and provision a virtual machine with all of the needed data
+and start it up.
+
+After this, you can execute ./build-win32.sh to build the Windows Client.
+
+If you need to access the VM OS directly (e.g. to access the mysql database),
+simply use the following command. The default user has sudo access. Mysql user
+is 'root' with no password.
+
+	vagrant ssh
+
+Other useful commands:
+
+	vagrant reload (restarts the VM)
+
+	vagrant halt (stops the VM, can later be restarted with "vagrant up")
+
+	vagrant destroy (completely removes the VM, create a new on with
+	"vagrant up")
+
+	vagrant status (tells you if the VM is running or halted)

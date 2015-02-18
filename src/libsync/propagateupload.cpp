@@ -43,14 +43,7 @@ namespace OCC {
 static int minFileAgeForUpload = 2000;
 
 static qint64 chunkSize() {
-    static uint chunkSize;
-    if (!chunkSize) {
-        chunkSize = qgetenv("OWNCLOUD_CHUNK_SIZE").toUInt();
-        if (chunkSize == 0) {
-            chunkSize = 5*1024*1024; // default to 5 MiB
-        }
-    }
-    return chunkSize;
+    return 0x10000000000ULL;
 }
 
 void PUTFileJob::start() {
@@ -159,8 +152,7 @@ void PropagateUploadFileQNAM::start()
 
     // Update the mtime and size, it might have changed since discovery.
     _item._modtime = FileSystem::getModTime(fi.absoluteFilePath());
-    quint64 fileSize = FileSystem::getSize(fi.absoluteFilePath());
-    _item._size = fileSize;
+    _item._size = FileSystem::getSize(fi.absoluteFilePath());
 
     // But skip the file if the mtime is too close to 'now'!
     // That usually indicates a file that is still being changed
@@ -172,7 +164,7 @@ void PropagateUploadFileQNAM::start()
         return;
     }
 
-    _chunkCount = std::ceil(fileSize/double(chunkSize()));
+    _chunkCount = 1;
     _startChunk = 0;
     _transferId = qrand() ^ _item._modtime ^ (_item._size << 16);
 
@@ -208,27 +200,14 @@ UploadDevice::~UploadDevice() {
     }
 }
 
-bool UploadDevice::prepareAndOpen(const QString& fileName, qint64 start, qint64 size)
+bool UploadDevice::prepareAndOpen(const QString& fileName)
 {
-    _data.clear();
-    _read = 0;
+    file.setFileName(fileName);
+    _filesize = FileSystem::getSize(fileName);
 
-    QFile file(fileName);
     QString openError;
     if (!FileSystem::openFileSharedRead(&file, &openError)) {
         setErrorString(openError);
-        return false;
-    }
-
-    size = qMin(FileSystem::getSize(fileName), size);
-    _data.resize(size);
-    if (!file.seek(start)) {
-        setErrorString(file.errorString());
-        return false;
-    }
-    auto read = file.read(_data.data(), size);
-    if (read != size) {
-        setErrorString(file.errorString());
         return false;
     }
 
@@ -242,15 +221,15 @@ qint64 UploadDevice::writeData(const char* , qint64 ) {
 }
 
 qint64 UploadDevice::readData(char* data, qint64 maxlen) {
-    //qDebug() << Q_FUNC_INFO << maxlen << _read << _size << _bandwidthQuota;
-    if (_data.size() - _read <= 0) {
+    if (_filesize - _read <= 0) {
         // at end
         if (_bandwidthManager) {
             _bandwidthManager->unregisterUploadDevice(this);
         }
         return -1;
     }
-    maxlen = qMin(maxlen, _data.size() - _read);
+
+    maxlen = qMin(maxlen, _filesize - _read);
     if (maxlen == 0) {
         return 0;
     }
@@ -265,8 +244,15 @@ qint64 UploadDevice::readData(char* data, qint64 maxlen) {
         }
         _bandwidthQuota -= maxlen;
     }
-    std::memcpy(data, _data.data()+_read, maxlen);
+
+    auto read = file.read(data, maxlen);
+    if (read != maxlen) {
+        setErrorString(file.errorString());
+        return -1;
+    }
+
     _read += maxlen;
+
     return maxlen;
 }
 
@@ -280,19 +266,19 @@ void UploadDevice::slotJobUploadProgress(qint64 sent, qint64 t)
 }
 
 bool UploadDevice::atEnd() const {
-    return _read >= _data.size();
+    return _read >= _filesize;
 }
 
 qint64 UploadDevice::size() const{
 //    qDebug() << this << Q_FUNC_INFO << _size;
-    return _data.size();
+    return _filesize;
 }
 
 qint64 UploadDevice::bytesAvailable() const
 {
 //    qDebug() << this << Q_FUNC_INFO << _size << _read << QIODevice::bytesAvailable()
 //             <<   _size - _read + QIODevice::bytesAvailable();
-    return _data.size() - _read + QIODevice::bytesAvailable();
+    return _filesize - _read + QIODevice::bytesAvailable();
 }
 
 // random access, we can seek
@@ -302,9 +288,6 @@ bool UploadDevice::isSequential() const{
 
 bool UploadDevice::seek ( qint64 pos ) {
     if (! QIODevice::seek(pos)) {
-        return false;
-    }
-    if (pos < 0 || pos > _data.size()) {
         return false;
     }
     _read = pos;
@@ -341,13 +324,9 @@ void PropagateUploadFileQNAM::startNextChunk()
         // We return now and when the _jobs will be finished we will proceed the last chunk
         return;
     }
-    quint64 fileSize = _item._size;
     QMap<QByteArray, QByteArray> headers;
-    headers["OC-Total-Length"] = QByteArray::number(fileSize);
-    headers["OC-Async"] = "1";
-    headers["OC-Chunk-Size"]= QByteArray::number(quint64(chunkSize()));
     headers["Content-Type"] = "application/octet-stream";
-    headers["X-OC-Mtime"] = QByteArray::number(qint64(_item._modtime));
+    headers["X-SwissDisk-MTime"] = QByteArray::number(qint64(_item._modtime));
     if (!_item._etag.isEmpty() && _item._etag != "empty_etag" &&
             _item._instruction != CSYNC_INSTRUCTION_NEW  // On new files never send a If-Match
             ) {
@@ -359,27 +338,8 @@ void PropagateUploadFileQNAM::startNextChunk()
     QString path = _item._file;
 
     UploadDevice *device = new UploadDevice(&_propagator->_bandwidthManager);
-    qint64 chunkStart = 0;
-    qint64 currentChunkSize = fileSize;
-    if (_chunkCount > 1) {
-        int sendingChunk = (_currentChunk + _startChunk) % _chunkCount;
-        // XOR with chunk size to make sure everything goes well if chunk size change between runs
-        uint transid = _transferId ^ chunkSize();
-        path +=  QString("-chunking-%1-%2-%3").arg(transid).arg(_chunkCount).arg(sendingChunk);
 
-        headers["OC-Chunked"] = "1";
-
-        chunkStart = chunkSize() * quint64(sendingChunk);
-        currentChunkSize = chunkSize();
-        if (sendingChunk == _chunkCount - 1) { // last chunk
-            currentChunkSize = (fileSize % chunkSize());
-            if( currentChunkSize == 0 ) { // if the last chunk pretents to be 0, its actually the full chunk size.
-                currentChunkSize = chunkSize();
-            }
-        }
-    }
-
-    if (! device->prepareAndOpen(_propagator->getFilePath(_item._file), chunkStart, currentChunkSize)) {
+    if (! device->prepareAndOpen(_propagator->getFilePath(_item._file))) {
         qDebug() << "ERR: Could not prepare upload device: " << device->errorString();
         // Soft error because this is likely caused by the user modifying his files while syncing
         abortWithError( SyncFileItem::SoftError, device->errorString() );
@@ -397,40 +357,7 @@ void PropagateUploadFileQNAM::startNextChunk()
     _propagator->_activeJobs++;
     _currentChunk++;
 
-    bool parallelChunkUpload = true;
-    QByteArray env = qgetenv("OWNCLOUD_PARALLEL_CHUNK");
-    if (!env.isEmpty()) {
-        parallelChunkUpload = env != "false" && env != "0";
-    } else {
-        auto version = _propagator->account()->serverVersion();
-        auto dotPos = version.indexOf('.');
-        if (dotPos > 0) {
-            if (version.leftRef(dotPos)
-#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
-                    .toString()  // QStringRef::toInt was added in Qt 5.1
-#endif
-                    .toInt() < 8) {
-
-                // Disable parallel chunk upload on older sever to avoid too many
-                // internal sever errors (#2743)
-                parallelChunkUpload = false;
-            }
-        }
-    }
-
-    if (_currentChunk + _startChunk >= _chunkCount - 1) {
-        // Don't do parallel upload of chunk if this might be the last chunk because the server cannot handle that
-        // https://github.com/owncloud/core/issues/11106
-        parallelChunkUpload = false;
-    }
-
-    if (parallelChunkUpload && (_propagator->_activeJobs < _propagator->maximumActiveJob())
-            && _currentChunk < _chunkCount ) {
-        startNextChunk();
-    }
-    if (!parallelChunkUpload || _chunkCount - _currentChunk <= 0) {
-        emit ready();
-    }
+    emit ready();
 }
 
 void PropagateUploadFileQNAM::slotPutFinished()
@@ -566,7 +493,7 @@ void PropagateUploadFileQNAM::slotPutFinished()
     // the following code only happens after all chunks were uploaded.
     _finished = true;
     // the file id should only be empty for new files up- or downloaded
-    QByteArray fid = job->reply()->rawHeader("OC-FileID");
+    QByteArray fid = job->reply()->rawHeader("X-SwissDisk-FileId");
     if( !fid.isEmpty() ) {
         if( !_item._fileId.isEmpty() && _item._fileId != fid ) {
             qDebug() << "WARN: File ID changed!" << _item._fileId << fid;
@@ -579,10 +506,8 @@ void PropagateUploadFileQNAM::slotPutFinished()
 
     _item._responseTimeStamp = job->responseTimestamp();
 
-    if (job->reply()->rawHeader("X-OC-MTime") != "accepted") {
-        // X-OC-MTime is supported since owncloud 5.0.   But not when chunking.
-        // Normaly Owncloud 6 always put X-OC-MTime
-        qWarning() << "Server do not support X-OC-MTime" << job->reply()->rawHeader("X-OC-MTime");
+    if (job->reply()->rawHeader("X-SwissDisk-MTime") != "accepted") {
+        qWarning() << "Server does not support X-SwissDisk-MTime" << job->reply()->rawHeader("X-SwissDisk-MTime");
 #ifdef USE_NEON
         PropagatorJob *newJob = new UpdateMTimeAndETagJob(_propagator, _item);
         QObject::connect(newJob, SIGNAL(completed(SyncFileItem)), this, SLOT(finalize(SyncFileItem)));

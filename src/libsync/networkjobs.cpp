@@ -334,21 +334,7 @@ void LsColJob::start()
     QNetworkRequest req;
     req.setRawHeader("Depth", "1");
     // FIXME The results are delivered without namespace, if this is ever a problem we need to check it..
-    QByteArray xml("<?xml version=\"1.0\" ?>\n"
-                   "<d:propfind xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\">\n"
-                   "  <d:prop>\n"
-                   "    <d:resourcetype/>\n"
-                   "    <d:quota-used-bytes/>\n"
-                   "    <d:getlastmodified/>\n"
-                   "    <d:getcontentlength/>\n"
-                   "    <d:resourcetype/>\n"
-                   "    <d:getetag/>\n"
-                   "    <oc:id/>\n"
-                   "    <oc:downloadURL/>\n"
-                   "    <oc:dDC/>\n"
-                   "    <oc:permissions/>\n"
-                   "  </d:prop>\n"
-                   "</d:propfind>\n");
+    QByteArray xml("<?xml version=\"1.0\" encoding=\"utf-8\" ?><propfind xmlns=\"DAV:\"><allprop/></propfind>\n");
     QBuffer *buf = new QBuffer(this);
     buf->setData(xml);
     buf->open(QIODevice::ReadOnly);
@@ -386,7 +372,8 @@ bool LsColJob::finished()
 {
     QString contentType = reply()->header(QNetworkRequest::ContentTypeHeader).toString();
     int httpCode = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    if (httpCode == 207 && contentType.contains("application/xml; charset=utf-8")) {
+
+    if (httpCode == 207 && contentType.contains("/xml;")) {
         // Parse DAV response
         QByteArray xml = reply()->readAll();
         QXmlStreamReader reader(xml);
@@ -475,14 +462,8 @@ bool LsColJob::finished()
 
 /*********************************************************************************************/
 
-namespace {
-const char statusphpC[] = "status.php";
-const char owncloudDirC[] = "owncloud/";
-}
-
 CheckServerJob::CheckServerJob(AccountPtr account, QObject *parent)
-    : AbstractNetworkJob(account, QLatin1String(statusphpC) , parent)
-    , _subdirFallback(false)
+    : AbstractNetworkJob(account, "", parent)
 {
 	_followRedirects = true;
     setIgnoreCredentialFailure(true);
@@ -506,59 +487,21 @@ void CheckServerJob::slotTimeout()
     deleteLater();
 }
 
-QString CheckServerJob::version(const QVariantMap &info)
-{
-    return info.value(QLatin1String("version")).toString();
-}
-
-QString CheckServerJob::versionString(const QVariantMap &info)
-{
-    return info.value(QLatin1String("versionstring")).toString();
-}
-
-bool CheckServerJob::installed(const QVariantMap &info)
-{
-    return info.value(QLatin1String("installed")).toBool();
-}
-
 bool CheckServerJob::finished()
 {
     account()->setSslConfiguration(reply()->sslConfiguration());
 
-    // The serverInstalls to /owncloud. Let's try that if the file wasn't found
-    // at the original location
-    if ((reply()->error() == QNetworkReply::ContentNotFoundError) && (!_subdirFallback)) {
-        _subdirFallback = true;
-        setPath(QLatin1String(owncloudDirC)+QLatin1String(statusphpC));
-        start();
-        qDebug() << "Retrying with" << reply()->url();
-        return false;
-    }
-
-    bool success = false;
     QByteArray body = reply()->readAll();
     int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    if( body.isEmpty() || httpStatus != 200) {
-        qDebug() << "error: status.php replied " << httpStatus << body;
+
+    if( httpStatus != 200) {
+        qDebug() << "error: Server replied " << httpStatus << body;
         emit instanceNotFound(reply());
     } else {
-        QVariantMap status = QtJson::parse(QString::fromUtf8(body), success).toMap();
-        // empty or invalid response
-        if (!success || status.isEmpty()) {
-            qDebug() << "status.php from server is not valid JSON!";
-        }
-
-        qDebug() << "status.php returns: " << status << " " << reply()->error() << " Reply: " << reply();
-        if( status.contains("installed")
-                && status.contains("version")
-                && status.contains("versionstring") ) {
-
-            emit instanceFound(reply()->url(), status);
-        } else {
-            qDebug() << "No proper answer on " << reply()->url();
-            emit instanceNotFound(reply());
-        }
+        qDebug() << "Server returns: " << reply()->error() << " Reply: " << reply();
+        emit instanceFound(reply()->url());
     }
+
     return true;
 }
 

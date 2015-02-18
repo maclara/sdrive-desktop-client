@@ -24,8 +24,7 @@ namespace OCC {
 
 ConnectionValidator::ConnectionValidator(AccountPtr account, QObject *parent)
     : QObject(parent),
-      _account(account),
-      _isCheckingServerAndAuth(false)
+      _account(account)
 {
 }
 
@@ -59,33 +58,19 @@ void ConnectionValidator::checkServerAndAuth()
         reportResult( NotConfigured );
         return;
     }
-    _isCheckingServerAndAuth = true;
 
     CheckServerJob *checkJob = new CheckServerJob(_account, this);
     checkJob->setIgnoreCredentialFailure(true);
-    connect(checkJob, SIGNAL(instanceFound(QUrl,QVariantMap)), SLOT(slotStatusFound(QUrl,QVariantMap)));
+    connect(checkJob, SIGNAL(instanceFound(QUrl)), SLOT(slotStatusFound(QUrl)));
     connect(checkJob, SIGNAL(networkError(QNetworkReply*)), SLOT(slotNoStatusFound(QNetworkReply*)));
     connect(checkJob, SIGNAL(timeout(QUrl)), SLOT(slotJobTimeout(QUrl)));
     checkJob->start();
 }
 
-void ConnectionValidator::slotStatusFound(const QUrl&url, const QVariantMap &info)
+void ConnectionValidator::slotStatusFound(const QUrl&url)
 {
     // status.php was found.
-    qDebug() << "** Application: ownCloud found: "
-             << url << " with version "
-             << CheckServerJob::versionString(info)
-             << "(" << CheckServerJob::version(info) << ")";
-
-    QString version = CheckServerJob::version(info);
-    _account->setServerVersion(version);
-
-    if (version.contains('.') && version.split('.')[0].toInt() < 5) {
-        _errors.append( tr("The configured server for this client is too old") );
-        _errors.append( tr("Please update to the latest server and restart the client.") );
-        reportResult( ServerVersionMismatch );
-        return;
-    }
+    qDebug() << "** Application: SwissDisk Found";
 
     // now check the authentication
     AbstractCredentials *creds = _account->credentials();
@@ -154,29 +139,8 @@ void ConnectionValidator::slotAuthFailed(QNetworkReply *reply)
 void ConnectionValidator::slotAuthSuccess()
 {
     _errors.clear();
-    if (!_isCheckingServerAndAuth) {
-        reportResult(Connected);
-        return;
-    }
-    checkServerCapabilities();
-}
-
-void ConnectionValidator::checkServerCapabilities()
-{
-    JsonApiJob *job = new JsonApiJob(_account, QLatin1String("ocs/v1.php/cloud/capabilities"), this);
-    QObject::connect(job, SIGNAL(jsonRecieved(QVariantMap)), this, SLOT(slotCapabilitiesRecieved(QVariantMap)));
-    job->start();
-}
-
-void ConnectionValidator::slotCapabilitiesRecieved(const QVariantMap &json)
-{
-    auto caps = json.value("ocs").toMap().value("data").toMap().value("capabilities");
-    qDebug() << "Server capabilities" << caps;
-    _account->setCapabilities(caps.toMap());
     reportResult(Connected);
-    return;
 }
-
 
 void ConnectionValidator::reportResult(Status status)
 {
