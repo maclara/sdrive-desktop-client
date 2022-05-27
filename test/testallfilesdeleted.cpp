@@ -198,7 +198,7 @@ private slots:
     {
         QFETCH(bool, hasInitialFingerPrint);
         FakeFolder fakeFolder{ FileInfo::A12_B12_C12_S12() };
-        fakeFolder.remoteModifier().setContents("C/c1", 'N');
+        fakeFolder.remoteModifier().setContents("C/c1", FileModifier::DefaultFileSize, 'N');
         fakeFolder.remoteModifier().setModTime("C/c1", QDateTime::currentDateTimeUtc().addDays(-2));
         fakeFolder.remoteModifier().remove("C/c2");
         if (hasInitialFingerPrint) {
@@ -234,12 +234,12 @@ private slots:
         /* Simulate a backup restoration */
 
         // A/a1 is an old file
-        fakeFolder.remoteModifier().setContents("A/a1", 'O');
+        fakeFolder.remoteModifier().setContents("A/a1", FileModifier::DefaultFileSize, 'O');
         fakeFolder.remoteModifier().setModTime("A/a1", QDateTime::currentDateTimeUtc().addDays(-2));
         // B/b1 did not exist at the time of the backup
         fakeFolder.remoteModifier().remove("B/b1");
         // B/b2 was uploaded by another user in the mean time.
-        fakeFolder.remoteModifier().setContents("B/b2", 'N');
+        fakeFolder.remoteModifier().setContents("B/b2", FileModifier::DefaultFileSize, 'N');
         fakeFolder.remoteModifier().setModTime("B/b2", QDateTime::currentDateTimeUtc().addDays(2));
 
         // C/c3 was removed since we made the backup

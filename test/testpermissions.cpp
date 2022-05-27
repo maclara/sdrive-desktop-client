@@ -68,10 +68,33 @@ class TestPermissions : public QObject
     Q_OBJECT
 
 private slots:
+    void initTestCase_data()
+    {
+        QTest::addColumn<Vfs::Mode>("vfsMode");
+        QTest::addColumn<bool>("filesAreDehydrated");
+
+        QTest::newRow("Vfs::Off") << Vfs::Off << false;
+
+        if (isVfsPluginAvailable(Vfs::WindowsCfApi)) {
+            QTest::newRow("Vfs::WindowsCfApi dehydrated") << Vfs::WindowsCfApi << true;
+
+            // TODO: the hydrated version will fail due to an issue in the winvfs plugin, so leave it disabled for now.
+            // QTest::newRow("Vfs::WindowsCfApi hydrated") << Vfs::WindowsCfApi << false;
+        } else if (Utility::isWindows()) {
+            QWARN("Skipping Vfs::WindowsCfApi");
+        }
+    }
 
     void t7pl()
     {
-        FakeFolder fakeFolder{ FileInfo() };
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        if (vfsMode == Vfs::WindowsCfApi) {
+            QSKIP("Known issue: the winvfs plug-in fails to set file permissions");
+        }
+
+        FakeFolder fakeFolder(FileInfo(), vfsMode, filesAreDehydrated);
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
         // Some of this test depends on the order of discovery. With threading
@@ -103,7 +126,7 @@ private slots:
         fakeFolder.remoteModifier().insert("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_/normalFile_PERM_WVND_.data", 100);
         applyPermissionsFromName(fakeFolder.remoteModifier());
 
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
         assertCsyncJournalOk(fakeFolder.syncJournal());
         qInfo("Do some changes and see how they propagate");
@@ -144,7 +167,7 @@ private slots:
         applyPermissionsFromName(fakeFolder.remoteModifier());
 
         //do the sync
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         assertCsyncJournalOk(fakeFolder.syncJournal());
         auto currentLocalState = fakeFolder.currentLocalState();
 
@@ -172,6 +195,7 @@ private slots:
         // remove the conflicts for the next state comparison
         fakeFolder.localModifier().remove(c1->path());
         fakeFolder.localModifier().remove(c2->path());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         //4. File should be updated, that's tested by assertLocalAndRemoteDir
         QCOMPARE(currentLocalState.find("normalDirectory_PERM_CKDNV_/canBeModified_PERM_W_.data")->contentSize, canBeModifiedSize + 1);
@@ -192,7 +216,7 @@ private slots:
 
         applyPermissionsFromName(fakeFolder.remoteModifier());
         // error: can't upload to readonly
-        QVERIFY(!fakeFolder.syncOnce());
+        QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
         assertCsyncJournalOk(fakeFolder.syncJournal());
         currentLocalState = fakeFolder.currentLocalState();
@@ -203,6 +227,7 @@ private slots:
         QVERIFY(!fakeFolder.currentRemoteState().find("readonlyDirectory_PERM_M_/newFile_PERM_WDNV_.data"));
         // remove it so next test succeed.
         fakeFolder.localModifier().remove("readonlyDirectory_PERM_M_/newFile_PERM_WDNV_.data");
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         // Both side should still be the same
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
@@ -212,7 +237,7 @@ private slots:
         // -> It must be recovered
         fakeFolder.localModifier().remove("readonlyDirectory_PERM_M_");
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         assertCsyncJournalOk(fakeFolder.syncJournal());
         currentLocalState = fakeFolder.currentLocalState();
         QVERIFY(currentLocalState.find("readonlyDirectory_PERM_M_/cannotBeRemoved_PERM_WVN_.data"));
@@ -225,7 +250,7 @@ private slots:
         fakeFolder.remoteModifier().mkdir("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_");
         fakeFolder.remoteModifier().insert("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_/normalFile_PERM_WVND_.data");
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
 
@@ -236,7 +261,7 @@ private slots:
         //new directory should be uploaded
         fakeFolder.localModifier().rename("readonlyDirectory_PERM_M_/subdir_PERM_CK_", "normalDirectory_PERM_CKDNV_/subdir_PERM_CKDNV_");
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         currentLocalState = fakeFolder.currentLocalState();
 
         // old name restored
@@ -254,7 +279,7 @@ private slots:
         fakeFolder.remoteModifier().mkdir("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_");
         fakeFolder.remoteModifier().insert("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_/normalFile_PERM_WVND_.data");
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
 
@@ -263,7 +288,7 @@ private slots:
 
         // do a sync to update the database
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         assertCsyncJournalOk(fakeFolder.syncJournal());
 
         QVERIFY(fakeFolder.currentLocalState().find("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_/normalFile_PERM_WVND_.data" ));
@@ -277,7 +302,7 @@ private slots:
         fakeFolder.localModifier().rename("normalDirectory_PERM_CKDNV_/subdir_PERM_CKDNV_", "readonlyDirectory_PERM_M_/moved_PERM_CK_" );
 
         // error: can't upload to readonly!
-        QVERIFY(!fakeFolder.syncOnce());
+        QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         currentLocalState = fakeFolder.currentLocalState();
 
         //1.
@@ -300,6 +325,7 @@ private slots:
         //but not on server
         fakeFolder.localModifier().remove("readonlyDirectory_PERM_M_/moved_PERM_CK_");
         fakeFolder.remoteModifier().remove("normalDirectory_PERM_CKDNV_/subdir_PERM_CKDNV_");
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
@@ -309,22 +335,22 @@ private slots:
 
         fakeFolder.remoteModifier().insert("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data");
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         editReadOnly("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data");
-        fakeFolder.localModifier().setContents("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data", 's');
+        fakeFolder.localModifier().setContents("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data", FileModifier::DefaultFileSize, 's');
         //do the sync
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         assertCsyncJournalOk(fakeFolder.syncJournal());
 
         QThread::sleep(1); // make sure changes have different mtime
         editReadOnly("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data");
-        fakeFolder.localModifier().setContents("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data", 'd');
+        fakeFolder.localModifier().setContents("readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data", FileModifier::DefaultFileSize, 'd');
 
         //do the sync
         applyPermissionsFromName(fakeFolder.remoteModifier());
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         assertCsyncJournalOk(fakeFolder.syncJournal());
 
         // there should be two conflict files
@@ -333,6 +359,7 @@ private slots:
         while (auto i = findConflict(currentLocalState, "readonlyDirectory_PERM_M_/cannotBeModified_PERM_DVN_.data")) {
             QVERIFY((i->contentChar == 's') || (i->contentChar == 'd'));
             fakeFolder.localModifier().remove(i->path());
+            QVERIFY(fakeFolder.applyLocalModificationsWithoutSync());
             currentLocalState = fakeFolder.currentLocalState();
             count++;
         }
@@ -350,7 +377,14 @@ private slots:
     // What happens if the source can't be moved or the target can't be created?
     void testForbiddenMoves()
     {
-        FakeFolder fakeFolder{FileInfo{}};
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        if (vfsMode == Vfs::WindowsCfApi) {
+            QSKIP("Known issue: the winvfs plug-in fails to set file permissions");
+        }
+
+        FakeFolder fakeFolder(FileInfo(), vfsMode, filesAreDehydrated);
 
         // Some of this test depends on the order of discovery. With threading
         // that order becomes effectively random, but we want to make sure to test
@@ -390,7 +424,7 @@ private slots:
         setAllPerm(rm.find("nocreatefile"), RemotePermissions::fromServerString("WDNVK"));
         setAllPerm(rm.find("nocreatedir"), RemotePermissions::fromServerString("WDNVC"));
 
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         // Renaming errors
         lm.rename("norename/file", "norename/file_renamed");
@@ -410,7 +444,7 @@ private slots:
         SyncFileItemSet discovery;
         connect(&fakeFolder.syncEngine(), &SyncEngine::aboutToPropagate, this, [&discovery](auto v) { discovery = v; });
         ItemCompletedSpy completeSpy(fakeFolder);
-        QVERIFY(!fakeFolder.syncOnce());
+        QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
         // if renaming doesn't work, just delete+create
         QVERIFY(itemInstruction(completeSpy, "norename/file", CSYNC_INSTRUCTION_REMOVE));
@@ -449,7 +483,7 @@ private slots:
         // A follow-up sync will restore allowed/file and allowed/sub2 and maintain the nocreatedir/file errors
         completeSpy.clear();
         QCOMPARE(fakeFolder.syncJournal().wipeErrorBlacklist(), 4);
-        QVERIFY(!fakeFolder.syncOnce());
+        QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
         QVERIFY(itemInstruction(completeSpy, "nocreatefile/file", CSYNC_INSTRUCTION_ERROR));
         QVERIFY(itemInstruction(completeSpy, "nocreatefile/zfile", CSYNC_INSTRUCTION_ERROR));
@@ -470,7 +504,14 @@ private slots:
 
     // Test for issue #7293
     void testAllowedMoveForbiddenDelete() {
-         FakeFolder fakeFolder{FileInfo{}};
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        if (vfsMode == Vfs::WindowsCfApi) {
+            QSKIP("Known issue: the winvfs plug-in fails to set file permissions");
+        }
+
+        FakeFolder fakeFolder(FileInfo(), vfsMode, filesAreDehydrated);
 
         // Some of this test depends on the order of discovery. With threading
         // that order becomes effectively random, but we want to make sure to test
@@ -493,7 +534,7 @@ private slots:
 
         setAllPerm(rm.find("changeonly"), RemotePermissions::fromServerString("NSV"));
 
-        QVERIFY(fakeFolder.syncOnce());
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         lm.rename("changeonly/sub1/filetorname1a", "changeonly/sub1/aaa1_renamed");
         lm.rename("changeonly/sub1/filetorname1z", "changeonly/sub1/zzz1_renamed");
@@ -505,11 +546,8 @@ private slots:
         lm.rename("changeonly/sub2", "changeonly/zzz");
 
 
-        auto expectedState = fakeFolder.currentLocalState();
-
-        QVERIFY(fakeFolder.syncOnce());
-        QCOMPARE(fakeFolder.currentLocalState(), expectedState);
-        QCOMPARE(fakeFolder.currentRemoteState(), expectedState);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
     }
 };
 
