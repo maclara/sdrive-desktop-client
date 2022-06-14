@@ -103,6 +103,10 @@ public:
     void setServerUrl(const QUrl &serverUrl, DetermineAuthTypeJob::AuthType workflowType);
     QUrl serverUrl() const;
 
+    void setWebFingerData(const QString &resource, const QUrl &href);
+    const QString &webFingerResource() const;
+    const QUrl &webFingerHref() const;
+
     // TODO: move this out of the class's state
     DetermineAuthTypeJob::AuthType authType();
 
@@ -142,11 +146,14 @@ public:
 private:
     QUrl _serverUrl;
 
-    QString _displayName;
+    QString _webFingerResource;
+    QUrl _webFingerHref;
 
     DetermineAuthTypeJob::AuthType _authType = DetermineAuthTypeJob::AuthType::Unknown;
 
     std::unique_ptr<AbstractAuthenticationStrategy> _authenticationStrategy;
+
+    QString _displayName;
 
     QSet<QSslCertificate> _customTrustedCaCertificates;
 

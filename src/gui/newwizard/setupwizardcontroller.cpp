@@ -11,6 +11,7 @@
 #include "states/basiccredentialssetupwizardstate.h"
 #include "states/oauthcredentialssetupwizardstate.h"
 #include "states/serverurlsetupwizardstate.h"
+#include "states/webfingersetupwizardstate.h"
 
 #include <QClipboard>
 #include <QTimer>
@@ -28,6 +29,7 @@ SetupWizardController::SetupWizardController(QWidget *parent)
     // initialize pagination
     _context->window()->setNavigationEntries({
         SetupWizardState::ServerUrlState,
+        SetupWizardState::WebFingerState,
         SetupWizardState::CredentialsState,
         SetupWizardState::AccountConfiguredState,
     });
@@ -86,6 +88,10 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState)
         _currentState = new ServerUrlSetupWizardState(_context);
         break;
     }
+    case SetupWizardState::WebFingerState: {
+        _currentState = new WebFingerSetupWizardState(_context);
+        break;
+    }
     case SetupWizardState::CredentialsState: {
         switch (_context->accountBuilder().authType()) {
         case DetermineAuthTypeJob::AuthType::Basic:
@@ -118,6 +124,11 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState)
 
         switch (_currentState->state()) {
         case SetupWizardState::ServerUrlState: {
+            changeStateTo(SetupWizardState::WebFingerState);
+            return;
+            Q_FALLTHROUGH();
+        }
+        case SetupWizardState::WebFingerState: {
             changeStateTo(SetupWizardState::CredentialsState);
             return;
         }

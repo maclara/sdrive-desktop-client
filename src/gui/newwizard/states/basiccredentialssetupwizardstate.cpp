@@ -21,7 +21,12 @@ namespace OCC::Wizard {
 BasicCredentialsSetupWizardState::BasicCredentialsSetupWizardState(SetupWizardContext *context)
     : AbstractSetupWizardState(context)
 {
-    _page = new BasicCredentialsSetupWizardPage(_context->accountBuilder().serverUrl());
+    if (!context->accountBuilder().webFingerResource().isEmpty()) {
+        Q_ASSERT(!context->accountBuilder().webFingerHref().isEmpty());
+        _page = BasicCredentialsSetupWizardPage::createForWebFinger(_context->accountBuilder().serverUrl(), context->accountBuilder().webFingerResource());
+    } else {
+        _page = new BasicCredentialsSetupWizardPage(_context->accountBuilder().serverUrl());
+    }
 }
 
 void BasicCredentialsSetupWizardState::evaluatePage()
