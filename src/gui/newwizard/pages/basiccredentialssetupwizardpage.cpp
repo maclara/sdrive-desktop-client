@@ -47,8 +47,8 @@ BasicCredentialsSetupWizardPage::BasicCredentialsSetupWizardPage(const QUrl &ser
 BasicCredentialsSetupWizardPage *BasicCredentialsSetupWizardPage::createForWebFinger(const QUrl &serverUrl, const QString &resource)
 {
     auto page = new BasicCredentialsSetupWizardPage(serverUrl);
-    page->_ui->usernameLabel->setText(resource);
-    page->_ui->usernameLabel->setEnabled(false);
+    page->_ui->usernameLineEdit->setText(resource);
+    page->_ui->usernameLineEdit->setEnabled(false);
     return page;
 }
 
