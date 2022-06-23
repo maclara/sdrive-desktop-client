@@ -137,3 +137,4 @@ deselect_remote_folders_you_do_not_wish_to_synchronize_ownCloud_QModelIndex = {"
 syncModeGroupBox_useVfsRadioButton_QRadioButton = {"container": advancedConfigGroupBox_syncModeGroupBox_QGroupBox, "name": "useVfsRadioButton", "type": "QRadioButton", "visible": 1}
 contentWidget_Enable_experimental_placeholder_mode_QPushButton = {"container": setupWizardWindow_contentWidget_QStackedWidget, "text": "Enable experimental placeholder mode", "type": "QPushButton", "unnamed": 1, "visible": 1}
 contentWidget_Stay_safe_QPushButton = {"container": setupWizardWindow_contentWidget_QStackedWidget, "text": "Stay safe", "type": "QPushButton", "unnamed": 1, "visible": 1}
+choose_What_To_Synchronize_Tree = {"aboveWidget": deselect_remote_folders_you_do_not_wish_to_synchronize_ownCloud_QModelIndex, "type": "QTreeWidget", "unnamed": 1, "visible": 1, "window":  add_Folder_Sync_Connection_OCC_FolderWizard}

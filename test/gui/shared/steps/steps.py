@@ -1260,6 +1260,7 @@ def step(context):
 def step(context):
     newAccount = AccountConnectionWizard()
     newAccount.selectFoldersToSync(context)
+    clickButton(waitForObject(newAccount.ADD_SYNC_CONNECTION_BUTTON))
 
 
 @When('the user selects manual sync folder option')
