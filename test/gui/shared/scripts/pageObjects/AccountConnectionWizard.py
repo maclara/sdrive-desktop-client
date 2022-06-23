@@ -71,7 +71,7 @@ class AccountConnectionWizard:
     ADD_FOLDER_SYNC_CONNECTION_WIZARD = (
         names.add_Folder_Sync_Connection_FolderWizardSourcePage_OCC_FolderWizardLocalPath
     )
-    SYNC_DIALOG_FOLDER_TREE = names.choose_What_To_Synchronize_QTreeWidget
+    SYNC_DIALOG_FOLDER_TREE = names.choose_What_To_Synchronize_Tree
     SYNC_DIALOG_ROOT_FOLDER = {
         "column": 0,
         "container": names.add_Folder_Sync_Connection_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget,
@@ -170,8 +170,8 @@ class AccountConnectionWizard:
         squish.clickButton(squish.waitForObject(self.MANUAL_SYNC_FOLDER_OPTION))
 
     def selectFoldersToSync(self, context):
-        self.openSyncDialog()
-
+#         self.openSyncDialog()
+ 
         # first deselect all
         squish.mouseClick(
             squish.waitForObject(self.SYNC_DIALOG_ROOT_FOLDER),
@@ -180,9 +180,11 @@ class AccountConnectionWizard:
             squish.Qt.NoModifier,
             squish.Qt.LeftButton,
         )
+        print("###############################################################")
+        print(context.table)
         for row in context.table[1:]:
             squish.mouseClick(
-                squish.waitForObjectItem(self.SYNC_DIALOG_FOLDER_TREE, "/." + row[0]),
+                squish.waitForObjectItem(self.SYNC_DIALOG_ROOT_FOLDER, "/." + row[0]),
                 11,
                 11,
                 squish.Qt.NoModifier,
