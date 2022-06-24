@@ -85,7 +85,6 @@ Feature: Syncing files
         When the user selects the following folders to sync:
             | folder        |
             | simple-folder |
-        And the user connects the account
         Then the folder "simple-folder" should exist on the file system
         But the folder "large-folder" should not exist on the file system
 
