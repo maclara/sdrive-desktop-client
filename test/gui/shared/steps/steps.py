@@ -1487,3 +1487,25 @@ def step(context, folderName):
     waitForObject(newAccount.SELECT_REMOTE_DESTINATION_FOLDER_WIZARD)
     newAccount.selectARootSyncDirectory(folderName)
     clickButton(waitForObject(newAccount.ADD_FOLDER_SYNC_CONNECTION_NEXT_BUTTON))
+
+
+@When('the user selects "|any|" option on filter dropdown button')
+def step(context, account):
+    clickButton(waitForObject(names.oCC_ProtocolWidget_filterButton_QPushButton))
+    activateItem(waitForObjectItem(names.settings_QMenu, account))
+
+
+@Then("the folder \"simple-folder\" should be displayed")
+def step(context):
+    test.compare(waitForObjectExists(names.o_tableView_0_1_QModelIndex_2).displayText, "simple-folder")
+
+
+@Then("the following information should be displayed on the sync table")
+def step(context):
+    for row in context.table[1:]:
+        action = row[0]
+        resource = row[1]
+        account = row[2]
+        test.compare(waitForObjectExists(names.o_tableView_0_0_QModelIndex).text, action)
+        test.compare(waitForObjectExists(names.o_tableView_0_1_QModelIndex_2).text, "simple-folder")
+        test.compare(waitForObjectExists(names.o_tableView_0_4_QModelIndex).text, "Alice Hansen@localhost")
