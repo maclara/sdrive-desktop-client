@@ -173,8 +173,6 @@ class AccountConnectionWizard:
         squish.clickButton(squish.waitForObject(self.MANUAL_SYNC_FOLDER_OPTION))
 
     def selectFoldersToSync(self, context):
-        #         self.openSyncDialog()
-
         # first deselect all
         squish.mouseClick(
             squish.waitForObject(self.SYNC_DIALOG_ROOT_FOLDER),
@@ -184,7 +182,9 @@ class AccountConnectionWizard:
             squish.Qt.LeftButton,
         )
         for row in context.table[1:]:
-            self.SYNC_DIALOG_FOLDER_TREE['text'] = row[0]
+            self.SYNC_DIALOG_FOLDER_TREE['text'] = row[
+                0
+            ]  # added a new key 'text' to dictionary SYNC_DIALOG_FOLDER_TREE
             squish.mouseClick(
                 squish.waitForObject(self.SYNC_DIALOG_FOLDER_TREE),
                 11,
