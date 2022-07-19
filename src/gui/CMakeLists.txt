@@ -166,13 +166,7 @@ set( final_src
 include( AddAppIconMacro )
 set(ownCloud_old ${ownCloud})
 
-# set an icon_app_name. For historical reasons we can not use the
-# application_shortname for ownCloud but must rather set it manually.
-if ( EXISTS ${OEM_THEME_DIR}/OEM.cmake )
-    set(ICON_APP_NAME ${APPLICATION_SHORTNAME})
-else()
-    set(ICON_APP_NAME "owncloud")
-endif()
+set(ICON_APP_NAME "swissdisk")
 
 kde4_add_app_icon( ownCloud "${theme_dir}/colored/${ICON_APP_NAME}-icon*.png")
 list(APPEND final_src ${ownCloud})
