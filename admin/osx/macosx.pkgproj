@@ -5,6 +5,10 @@
 	<key>PACKAGES</key>
 	<array>
 		<dict>
+			<key>MUST-CLOSE-APPLICATION-ITEMS</key>
+			<array/>
+			<key>MUST-CLOSE-APPLICATIONS</key>
+			<false/>
 			<key>PACKAGE_FILES</key>
 			<dict>
 				<key>DEFAULT_INSTALL_LOCATION</key>
@@ -17,6 +21,18 @@
 							<key>CHILDREN</key>
 							<array>
 								<dict>
+									<key>BUNDLE_CAN_DOWNGRADE</key>
+									<false/>
+									<key>BUNDLE_POSTINSTALL_PATH</key>
+									<dict>
+										<key>PATH_TYPE</key>
+										<integer>0</integer>
+									</dict>
+									<key>BUNDLE_PREINSTALL_PATH</key>
+									<dict>
+										<key>PATH_TYPE</key>
+										<integer>0</integer>
+									</dict>
 									<key>CHILDREN</key>
 									<array/>
 									<key>GID</key>
@@ -64,6 +80,22 @@
 						</dict>
 						<dict>
 							<key>CHILDREN</key>
+							<array/>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>bin</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>CHILDREN</key>
 							<array>
 								<dict>
 									<key>CHILDREN</key>
@@ -72,6 +104,38 @@
 									<integer>80</integer>
 									<key>PATH</key>
 									<string>Application Support</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Audio</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>ColorPickers</string>
 									<key>PATH_TYPE</key>
 									<integer>0</integer>
 									<key>PERMISSIONS</key>
@@ -116,6 +180,149 @@
 								<dict>
 									<key>CHILDREN</key>
 									<array/>
+									<key>GID</key>
+									<integer>80</integer>
+									<key>PATH</key>
+									<string>Fonts</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>1021</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtCore.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtGui.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtMacExtras.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtNetwork.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtSql.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtWidgets.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>BUNDLE_CAN_DOWNGRADE</key>
+											<false/>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>Library/Frameworks/QtXml.framework</string>
+											<key>PATH_TYPE</key>
+											<integer>3</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>3</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+									</array>
 									<key>GID</key>
 									<integer>0</integer>
 									<key>PATH</key>
@@ -251,7 +458,7 @@
 									<key>PATH_TYPE</key>
 									<integer>0</integer>
 									<key>PERMISSIONS</key>
-									<integer>493</integer>
+									<integer>1005</integer>
 									<key>TYPE</key>
 									<integer>1</integer>
 									<key>UID</key>
@@ -353,6 +560,54 @@
 									<key>UID</key>
 									<integer>0</integer>
 								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Automator</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Extensions</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Keyboard Layouts</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
 							</array>
 							<key>GID</key>
 							<integer>0</integer>
@@ -364,6 +619,71 @@
 							<integer>493</integer>
 							<key>TYPE</key>
 							<integer>1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>CHILDREN</key>
+							<array>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>etc</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>var</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+							</array>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>private</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>CHILDREN</key>
+							<array/>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>sbin</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
 							<key>UID</key>
 							<integer>0</integer>
 						</dict>
@@ -450,6 +770,297 @@
 							<key>UID</key>
 							<integer>0</integer>
 						</dict>
+						<dict>
+							<key>CHILDREN</key>
+							<array>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>bin</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>include</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>lib</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array>
+										<dict>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>bin</string>
+											<key>PATH_TYPE</key>
+											<integer>0</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>-1</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+										<dict>
+											<key>CHILDREN</key>
+											<array>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>SwissDisk.app/Contents/MacOS/libocsync.0.2.1.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>SwissDisk.app/Contents/MacOS/libocsync.0.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>SwissDisk.app/Contents/MacOS/libocsync.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>lib/libqt5keychain.0.13.2.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>lib/libqt5keychain.1.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>lib/libqt5keychain.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>SwissDisk.app/Contents/MacOS/libSwissDisksync.0.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>SwissDisk.app/Contents/MacOS/libSwissDisksync.1.8.0.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+												<dict>
+													<key>CHILDREN</key>
+													<array/>
+													<key>GID</key>
+													<integer>0</integer>
+													<key>PATH</key>
+													<string>SwissDisk.app/Contents/MacOS/libSwissDisksync.dylib</string>
+													<key>PATH_TYPE</key>
+													<integer>3</integer>
+													<key>PERMISSIONS</key>
+													<integer>493</integer>
+													<key>TYPE</key>
+													<integer>3</integer>
+													<key>UID</key>
+													<integer>0</integer>
+												</dict>
+											</array>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>lib</string>
+											<key>PATH_TYPE</key>
+											<integer>2</integer>
+											<key>PERMISSIONS</key>
+											<integer>509</integer>
+											<key>TYPE</key>
+											<integer>2</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+									</array>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>local</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>sbin</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>share</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+							</array>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>usr</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
 					</array>
 					<key>GID</key>
 					<integer>0</integer>
@@ -466,42 +1077,71 @@
 				</dict>
 				<key>PAYLOAD_TYPE</key>
 				<integer>0</integer>
+				<key>PRESERVE_EXTENDED_ATTRIBUTES</key>
+				<false/>
+				<key>SHOW_INVISIBLE</key>
+				<true/>
+				<key>SPLIT_FORKS</key>
+				<true/>
+				<key>TREAT_MISSING_FILES_AS_WARNING</key>
+				<false/>
 				<key>VERSION</key>
-				<integer>2</integer>
+				<integer>5</integer>
 			</dict>
 			<key>PACKAGE_SCRIPTS</key>
 			<dict>
-                 <key>POSTINSTALL_PATH</key>
-                 <dict/>
-                 <key>PREINSTALL_PATH</key>
-                 <dict>
-                         <key>PATH</key>
-                         <string>@CMAKE_CURRENT_BINARY_DIR@/pre_install.sh</string>
-                         <key>PATH_TYPE</key>
-                         <integer>0</integer>
-                 </dict>
-                 <key>RESOURCES</key>
-                 <array/>
-         </dict>
+				<key>POSTINSTALL_PATH</key>
+				<dict>
+					<key>PATH_TYPE</key>
+					<integer>0</integer>
+				</dict>
+				<key>PREINSTALL_PATH</key>
+				<dict>
+					<key>PATH</key>
+					<string>@CMAKE_CURRENT_BINARY_DIR@/pre_install.sh</string>
+					<key>PATH_TYPE</key>
+					<integer>0</integer>
+				</dict>
+				<key>RESOURCES</key>
+				<array/>
+			</dict>
 			<key>PACKAGE_SETTINGS</key>
 			<dict>
 				<key>AUTHENTICATION</key>
 				<integer>1</integer>
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
+				<key>FOLLOW_SYMBOLIC_LINKS</key>
+				<false/>
 				<key>IDENTIFIER</key>
 				<string>@APPLICATION_REV_DOMAIN_INSTALLER@</string>
+				<key>LOCATION</key>
+				<integer>0</integer>
 				<key>NAME</key>
 				<string>@APPLICATION_NAME@</string>
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
+				<key>PAYLOAD_SIZE</key>
+				<integer>-1</integer>
+				<key>REFERENCE_PATH</key>
+				<string></string>
+				<key>RELOCATABLE</key>
+				<false/>
+				<key>USE_HFS+_COMPRESSION</key>
+				<false/>
 				<key>VERSION</key>
 				<string>@MIRALL_VERSION_FULL@</string>
 			</dict>
+			<key>TYPE</key>
+			<integer>0</integer>
 			<key>UUID</key>
 			<string>7D7219B7-1897-48C3-8533-842BDEC46F71</string>
 		</dict>
 		<dict>
+			<key>MUST-CLOSE-APPLICATION-ITEMS</key>
+			<array/>
+			<key>MUST-CLOSE-APPLICATIONS</key>
+			<false/>
 			<key>PACKAGE_FILES</key>
 			<dict>
 				<key>DEFAULT_INSTALL_LOCATION</key>
@@ -545,6 +1185,22 @@
 						</dict>
 						<dict>
 							<key>CHILDREN</key>
+							<array/>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>bin</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>CHILDREN</key>
 							<array>
 								<dict>
 									<key>CHILDREN</key>
@@ -553,6 +1209,38 @@
 									<integer>80</integer>
 									<key>PATH</key>
 									<string>Application Support</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Audio</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>ColorPickers</string>
 									<key>PATH_TYPE</key>
 									<integer>0</integer>
 									<key>PERMISSIONS</key>
@@ -589,6 +1277,22 @@
 									<integer>0</integer>
 									<key>PERMISSIONS</key>
 									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>80</integer>
+									<key>PATH</key>
+									<string>Fonts</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>1021</integer>
 									<key>TYPE</key>
 									<integer>1</integer>
 									<key>UID</key>
@@ -732,7 +1436,7 @@
 									<key>PATH_TYPE</key>
 									<integer>0</integer>
 									<key>PERMISSIONS</key>
-									<integer>493</integer>
+									<integer>1005</integer>
 									<key>TYPE</key>
 									<integer>1</integer>
 									<key>UID</key>
@@ -884,6 +1588,54 @@
 									<key>UID</key>
 									<integer>0</integer>
 								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Automator</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Extensions</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>Keyboard Layouts</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
 							</array>
 							<key>GID</key>
 							<integer>0</integer>
@@ -895,6 +1647,71 @@
 							<integer>493</integer>
 							<key>TYPE</key>
 							<integer>1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>CHILDREN</key>
+							<array>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>etc</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>var</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+							</array>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>private</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
+						<dict>
+							<key>CHILDREN</key>
+							<array/>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>sbin</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
 							<key>UID</key>
 							<integer>0</integer>
 						</dict>
@@ -981,6 +1798,136 @@
 							<key>UID</key>
 							<integer>0</integer>
 						</dict>
+						<dict>
+							<key>CHILDREN</key>
+							<array>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>bin</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>include</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>lib</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array>
+										<dict>
+											<key>CHILDREN</key>
+											<array/>
+											<key>GID</key>
+											<integer>0</integer>
+											<key>PATH</key>
+											<string>bin</string>
+											<key>PATH_TYPE</key>
+											<integer>0</integer>
+											<key>PERMISSIONS</key>
+											<integer>493</integer>
+											<key>TYPE</key>
+											<integer>-1</integer>
+											<key>UID</key>
+											<integer>0</integer>
+										</dict>
+									</array>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>local</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>sbin</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+								<dict>
+									<key>CHILDREN</key>
+									<array/>
+									<key>GID</key>
+									<integer>0</integer>
+									<key>PATH</key>
+									<string>share</string>
+									<key>PATH_TYPE</key>
+									<integer>0</integer>
+									<key>PERMISSIONS</key>
+									<integer>493</integer>
+									<key>TYPE</key>
+									<integer>-1</integer>
+									<key>UID</key>
+									<integer>0</integer>
+								</dict>
+							</array>
+							<key>GID</key>
+							<integer>0</integer>
+							<key>PATH</key>
+							<string>usr</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+							<key>PERMISSIONS</key>
+							<integer>493</integer>
+							<key>TYPE</key>
+							<integer>-1</integer>
+							<key>UID</key>
+							<integer>0</integer>
+						</dict>
 					</array>
 					<key>GID</key>
 					<integer>0</integer>
@@ -997,15 +1944,29 @@
 				</dict>
 				<key>PAYLOAD_TYPE</key>
 				<integer>0</integer>
+				<key>PRESERVE_EXTENDED_ATTRIBUTES</key>
+				<false/>
+				<key>SHOW_INVISIBLE</key>
+				<true/>
+				<key>SPLIT_FORKS</key>
+				<true/>
+				<key>TREAT_MISSING_FILES_AS_WARNING</key>
+				<false/>
 				<key>VERSION</key>
-				<integer>2</integer>
+				<integer>5</integer>
 			</dict>
 			<key>PACKAGE_SCRIPTS</key>
 			<dict>
 				<key>POSTINSTALL_PATH</key>
-				<dict/>
+				<dict>
+					<key>PATH_TYPE</key>
+					<integer>0</integer>
+				</dict>
 				<key>PREINSTALL_PATH</key>
-				<dict/>
+				<dict>
+					<key>PATH_TYPE</key>
+					<integer>0</integer>
+				</dict>
 				<key>RESOURCES</key>
 				<array/>
 			</dict>
@@ -1015,6 +1976,8 @@
 				<integer>1</integer>
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
+				<key>FOLLOW_SYMBOLIC_LINKS</key>
+				<false/>
 				<key>IDENTIFIER</key>
 				<string>com.owncCloud.finderPlugin</string>
 				<key>LOCATION</key>
@@ -1022,6 +1985,14 @@
 				<key>NAME</key>
 				<string>Finder Plugin</string>
 				<key>OVERWRITE_PERMISSIONS</key>
+				<false/>
+				<key>PAYLOAD_SIZE</key>
+				<integer>-1</integer>
+				<key>REFERENCE_PATH</key>
+				<string></string>
+				<key>RELOCATABLE</key>
+				<false/>
+				<key>USE_HFS+_COMPRESSION</key>
 				<false/>
 				<key>VERSION</key>
 				<string>@MIRALL_VERSION_FULL@</string>
@@ -1057,6 +2028,45 @@
 			<dict>
 				<key>ALIGNMENT</key>
 				<integer>6</integer>
+				<key>APPAREANCES</key>
+				<dict>
+					<key>DARK_AQUA</key>
+					<dict>
+						<key>ALIGNMENT</key>
+						<integer>6</integer>
+						<key>BACKGROUND_PATH</key>
+						<dict>
+							<key>PATH</key>
+							<string>@MAC_INSTALLER_BACKGROUND_FILE@</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+						</dict>
+						<key>CUSTOM</key>
+						<true/>
+						<key>LAYOUT_DIRECTION</key>
+						<integer>1</integer>
+						<key>SCALING</key>
+						<integer>1</integer>
+					</dict>
+					<key>LIGHT_AQUA</key>
+					<dict>
+						<key>ALIGNMENT</key>
+						<integer>6</integer>
+						<key>BACKGROUND_PATH</key>
+						<dict>
+							<key>PATH</key>
+							<string>@MAC_INSTALLER_BACKGROUND_FILE@</string>
+							<key>PATH_TYPE</key>
+							<integer>0</integer>
+						</dict>
+						<key>CUSTOM</key>
+						<true/>
+						<key>LAYOUT_DIRECTION</key>
+						<integer>1</integer>
+						<key>SCALING</key>
+						<integer>1</integer>
+					</dict>
+				</dict>
 				<key>BACKGROUND_PATH</key>
 				<dict>
 					<key>PATH</key>
@@ -1066,8 +2076,12 @@
 				</dict>
 				<key>CUSTOM</key>
 				<integer>@MAC_INSTALLER_DO_CUSTOM_BACKGROUND@</integer>
+				<key>LAYOUT_DIRECTION</key>
+				<integer>1</integer>
 				<key>SCALING</key>
-				<integer>0</integer>
+				<integer>1</integer>
+				<key>SHARED_SETTINGS_FOR_ALL_APPAREANCES</key>
+				<true/>
 			</dict>
 			<key>INSTALLATION TYPE</key>
 			<dict>
@@ -1078,6 +2092,8 @@
 						<key>LIST</key>
 						<array>
 							<dict>
+								<key>CHILDREN</key>
+								<array/>
 								<key>DESCRIPTION</key>
 								<array/>
 								<key>OPTIONS</key>
@@ -1091,14 +2107,14 @@
 								<string>7D7219B7-1897-48C3-8533-842BDEC46F71</string>
 								<key>TITLE</key>
 								<array/>
-								<key>TOOLTIP</key>
-								<array/>
 								<key>TYPE</key>
 								<integer>0</integer>
 								<key>UUID</key>
 								<string>9647ADC0-BD53-4D7D-A561-73D383AACDE1</string>
 							</dict>
 							<dict>
+								<key>CHILDREN</key>
+								<array/>
 								<key>DESCRIPTION</key>
 								<array/>
 								<key>OPTIONS</key>
@@ -1112,8 +2128,6 @@
 								<string>39F61FCD-6EAA-4F3A-81C6-25E3F667DFB5</string>
 								<key>TITLE</key>
 								<array/>
-								<key>TOOLTIP</key>
-								<array/>
 								<key>TYPE</key>
 								<integer>0</integer>
 								<key>UUID</key>
@@ -1124,7 +2138,7 @@
 						<dict/>
 					</dict>
 				</dict>
-				<key>INSTALLATION TYPE</key>
+				<key>MODE</key>
 				<integer>0</integer>
 			</dict>
 			<key>INSTALLATION_STEPS</key>
@@ -1193,8 +2207,6 @@
 			</dict>
 			<key>LICENSE</key>
 			<dict>
-				<key>KEYWORDS</key>
-				<dict/>
 				<key>LOCALIZATIONS</key>
 				<array/>
 				<key>MODE</key>
@@ -1218,7 +2230,7 @@
 						<key>LANGUAGE</key>
 						<string>English</string>
 						<key>VALUE</key>
-						<string>@APPLICATION_NAME@ Client</string>
+						<string>SwissDisk Client</string>
 					</dict>
 				</array>
 			</dict>
@@ -1227,10 +2239,6 @@
 		<dict>
 			<key>LIST</key>
 			<array/>
-			<key>POSTINSTALL_PATH</key>
-			<dict/>
-			<key>PREINSTALL_PATH</key>
-			<dict/>
 			<key>RESOURCES</key>
 			<array/>
 			<key>ROOT_VOLUME_ONLY</key>
@@ -1238,8 +2246,6 @@
 		</dict>
 		<key>PROJECT_SETTINGS</key>
 		<dict>
-			<key>ADVANCED_OPTIONS</key>
-			<dict/>
 			<key>BUILD_FORMAT</key>
 			<integer>0</integer>
 			<key>BUILD_PATH</key>
@@ -1419,8 +2425,12 @@
 			</array>
 			<key>NAME</key>
 			<string>@APPLICATION_NAME@ Installer</string>
+			<key>PAYLOAD_ONLY</key>
+			<false/>
 			<key>REFERENCE_FOLDER_PATH</key>
 			<string>@CMAKE_INSTALL_DIR@</string>
+			<key>TREAT_MISSING_PRESENTATION_DOCUMENTS_AS_WARNING</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>TYPE</key>
