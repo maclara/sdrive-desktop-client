@@ -3,9 +3,6 @@
 SDIR="`pwd`/../.."
 BDIR="`pwd`/build"
 
-# Do not build with 10.10 until neon conflict is resolved
-SDK="10.9"
-
 rm -rf "$BDIR"
 mkdir -p "$BDIR"
 
@@ -13,13 +10,22 @@ cd "$BDIR"
 
 rm -rf "../install"
 
-export PATH="$HOME/Qt5.6.3/5.6.3/clang_64/bin:$PATH"
+QT_LOC="$HOME/Qt5.6.3/5.6.3/clang_64"
+
+export PATH="$QT_LOC/bin:$PATH"
 export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
 
 cmake -DOEM_THEME_DIR="$SDIR/SwissDisk" -DCMAKE_INSTALL_PREFIX=../../install "$SDIR"
 
 make -j6
 
-# make install
+make install
 
-# ./admin/osx/create_mac.sh ../install . 'Developer ID Installer: Benjamin Collins (VJAD6F74WN)'
+rm -rf ../../install/Library/Frameworks
+mkdir -p ../../install/Library/Frameworks
+cp -a $QT_LOC/lib/Qt{Sql,Widgets,Network,Xml,MacExtras,Gui,Core}.framework ../../install/Library/Frameworks/
+rm -rf ../../install/Library/Frameworks/*.framework/Versions/5/Headers
+rm -f ../../install/Library/Frameworks/*.framework/Versions/5/*_debug*
+
+./admin/osx/create_mac.sh ../../install . 
+#'3rd Party Mac Developer Installer: maClara, LLC (53R32TQWB6)'
