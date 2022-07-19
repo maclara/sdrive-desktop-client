@@ -32,6 +32,5 @@
         <file>theme/colored/state-sync-128.png</file>
         <file>theme/colored/state-sync-256.png</file>
         <file>theme/colored/wizard_logo.png</file>
-        <file>theme/colored/wizard_logo@2x.png</file>
     </qresource>
 </RCC>
