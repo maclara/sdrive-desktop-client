@@ -52,7 +52,8 @@ public:
                "<p>Licensed under the GNU General Public License (GPL) Version 2.0<br/>"
                "ownCloud and the ownCloud Logo are registered trademarks of ownCloud, "
                "Inc. in the United States, other countries, or both.</p>"
-               "<p>All SwissDisk logos and the SwissDisk name are Copyright maClara, LLC.</p>"
+               "<p>All SwissDisk logos and the SwissDisk name are Copyright "
+               "<a href='https://maclara-llc.com/'>maClara, LLC.</a></p>"
                )
             .arg(MIRALL_VERSION_STRING)
             .arg("http://" MIRALL_STRINGIFY(APPLICATION_DOMAIN))
