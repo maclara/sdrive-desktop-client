@@ -8,8 +8,6 @@ mkdir -p "$BDIR"
 
 cd "$BDIR"
 
-rm -rf "../install"
-
 QT_LOC="$HOME/Qt5.6.3/5.6.3/clang_64"
 
 export PATH="$QT_LOC/bin:$PATH"
