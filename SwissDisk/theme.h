@@ -102,7 +102,7 @@ public:
         QString devString;
 #ifdef GIT_SHA1
         const QString githubPrefix(QLatin1String(
-                                       "https://github.com/maclara-llc/sdrive-desktop-client/commit/"));
+                                       "https://github.com/maclara/sdrive-desktop-client/commit/"));
         const QString gitSha1(QLatin1String(GIT_SHA1));
         devString = QCoreApplication::translate("about()",
                        "<p><small>Built from Git revision <a href=\"%1\">%2</a>"
