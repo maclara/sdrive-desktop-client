@@ -105,16 +105,13 @@ void Account::save()
 {
     QScopedPointer<QSettings> settings(settingsWithGroup(Theme::instance()->appName()));
     settings->setValue(QLatin1String(urlC), _url.toString());
+    settings->setValue(QLatin1String(userC), _user);
     if (_credentials) {
         _credentials->persist();
         Q_FOREACH(QString key, _settingsMap.keys()) {
             settings->setValue(key, _settingsMap.value(key));
         }
         settings->setValue(QLatin1String(authTypeC), _credentials->authType());
-
-        // HACK: Save http_user also as user
-        if (_settingsMap.contains(httpUserC))
-            settings->setValue(userC, _settingsMap.value(httpUserC));
     }
     settings->sync();
 
@@ -144,6 +141,7 @@ AccountPtr Account::restore()
     acc->setSharedThis(acc);
 
     acc->setUrl(settings->value(QLatin1String(urlC)).toUrl());
+    acc->setUser(settings->value(QLatin1String(userC)).toString());
     acc->setCredentials(CredentialsFactory::create(settings->value(QLatin1String(authTypeC)).toString()));
 
     // We want to only restore settings for that auth type and the user value
@@ -343,6 +341,11 @@ void Account::setSslErrorHandler(AbstractSslErrorHandler *handler)
 void Account::setUrl(const QUrl &url)
 {
     _url = url;
+}
+
+void Account::setUser(const QString &user)
+{
+    _user = user;
 }
 
 QUrl Account::concatUrlPath(const QUrl &url, const QString &concatPath,

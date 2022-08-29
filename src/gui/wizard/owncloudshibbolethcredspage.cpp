@@ -98,7 +98,7 @@ AbstractCredentials* OwncloudShibbolethCredsPage::getCredentials() const
 void OwncloudShibbolethCredsPage::slotShibbolethCookieReceived(const QNetworkCookie &cookie)
 {
     _cookie = cookie;
-    emit connectToOCUrl(field("OCUrl").toString().simplified());
+    emit connectToOCUrl(field("OCUrl").toString().simplified(), QString());
 }
 
 void OwncloudShibbolethCredsPage::slotBrowserRejected()

@@ -60,7 +60,7 @@ OwncloudWizard::OwncloudWizard(QWidget *parent)
 
     connect( this, SIGNAL(currentIdChanged(int)), SLOT(slotCurrentPageChanged(int)));
     connect( _setupPage, SIGNAL(determineAuthType(QString)), SIGNAL(determineAuthType(QString)));
-    connect( _httpCredsPage, SIGNAL(connectToOCUrl(QString)), SIGNAL(connectToOCUrl(QString)));
+    connect( _httpCredsPage, SIGNAL(connectToOCUrl(QString, QString)), SIGNAL(connectToOCUrl(QString, QString)));
     connect( _advancedSetupPage, SIGNAL(createLocalAndRemoteFolders(QString, QString)),
              SIGNAL(createLocalAndRemoteFolders(QString, QString)));
     connect(this, SIGNAL(customButtonClicked(int)), this, SIGNAL(skipFolderConfiguration()));

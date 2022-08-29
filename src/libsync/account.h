@@ -105,6 +105,10 @@ public:
     void setUrl(const QUrl &url);
     QUrl url() const { return _url; }
 
+    /** Username for the server (user to build davPath) */
+    void setUser(const QString &user);
+    QString user() const { return _user; }
+
     /** Returns webdav entry URL, based on url() */
     QUrl davUrl() const;
 
@@ -165,6 +169,7 @@ private:
     QWeakPointer<Account> _sharedThis;
     QMap<QString, QVariant> _settingsMap;
     QUrl _url;
+    QString _user;
     QList<QSslCertificate> _approvedCerts;
     QSslConfiguration _sslConfiguration;
     QScopedPointer<AbstractSslErrorHandler> _sslErrorHandler;

@@ -40,8 +40,9 @@ OwncloudHttpCredsPage::OwncloudHttpCredsPage(QWidget* parent)
         _ocWizard = qobject_cast<OwncloudWizard *>(parent);
     }
 
-    registerField( QLatin1String("OCUser*"),   _ui.leUsername);
-    registerField( QLatin1String("OCPasswd*"), _ui.lePassword);
+    registerField( QLatin1String("OCUser*"),        _ui.leUsername);
+    registerField( QLatin1String("OCRootAccount"), _ui.leRootAccount);
+    registerField( QLatin1String("OCPasswd*"),      _ui.lePassword);
 
     setTitle(WizardCommon::titleTemplate().arg(tr("Connect to %1").arg(Theme::instance()->appNameGUI())));
     setSubTitle(WizardCommon::subTitleTemplate().arg(tr("Enter user credentials")));
@@ -71,8 +72,9 @@ void OwncloudHttpCredsPage::initializePage()
 {
     WizardCommon::initErrorLabel(_ui.errorLabel);
 
+    AccountPtr acc = _ocWizard->account();
     OwncloudWizard* ocWizard = qobject_cast< OwncloudWizard* >(wizard());
-    AbstractCredentials *cred = ocWizard->account()->credentials();
+    AbstractCredentials *cred = acc->credentials();
     HttpCredentials *httpCreds = qobject_cast<HttpCredentials*>(cred);
     if (httpCreds) {
         const QString user = httpCreds->fetchUser();
@@ -86,6 +88,7 @@ void OwncloudHttpCredsPage::initializePage()
 void OwncloudHttpCredsPage::cleanupPage()
 {
     _ui.leUsername->clear();
+    _ui.leRootAccount->clear();
     _ui.lePassword->clear();
 }
 
@@ -100,13 +103,22 @@ bool OwncloudHttpCredsPage::validatePage()
         _checking = true;
         startSpinner();
         emit completeChanged();
-        emit connectToOCUrl(field("OCUrl").toString().simplified());
+
+        QString urlUser = _ui.leRootAccount->text().isEmpty() ? _ui.leUsername->text() : _ui.leRootAccount->text();
+        emit connectToOCUrl(field("OCUrl").toString().simplified(), urlUser);
 
         return false;
     } else {
         _checking = false;
         emit completeChanged();
         stopSpinner();
+
+        AccountPtr acc = _ocWizard->account();
+        if (_ui.leRootAccount->text().isEmpty())
+            acc->setUser(_ui.leUsername->text());
+        else
+            acc->setUser(_ui.leRootAccount->text());
+
         return true;
     }
     return true;

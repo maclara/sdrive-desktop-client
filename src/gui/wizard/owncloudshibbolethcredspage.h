@@ -40,7 +40,7 @@ public:
   void setConnected();
 
 Q_SIGNALS:
-  void connectToOCUrl(const QString&);
+  void connectToOCUrl(const QString&, const QString&);
 
 public Q_SLOTS:
   void setVisible(bool visible) Q_DECL_OVERRIDE;

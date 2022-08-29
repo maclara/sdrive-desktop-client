@@ -183,7 +183,13 @@ int OwncloudSetupPage::nextId() const
 
 QString OwncloudSetupPage::url() const
 {
-    QString url = _ui.leUrl->text().simplified();
+    QString url;
+
+    if (_ui.leUrl->text().isEmpty())
+        url = Theme::instance()->overrideServerUrl();
+    else
+        url = _ui.leUrl->text().simplified();
+
     return url;
 }
 

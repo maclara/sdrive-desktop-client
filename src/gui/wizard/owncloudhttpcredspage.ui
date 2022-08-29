@@ -32,6 +32,7 @@
    </item>
    <item row="1" column="1">
     <layout class="QFormLayout" name="formLayout">
+
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -42,6 +43,7 @@
        </property>
       </widget>
      </item>
+
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
@@ -52,16 +54,30 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
+
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&amp;Root account (optional)</string>
+       </property>
+       <property name="buddy">
+        <cstring>leRootAccount</cstring>
+       </property>
+      </widget>
+     </item>
+
+     <item row="3" column="0" colspan="2">
       <widget class="QLabel" name="errorLabel">
        <property name="text">
         <string>Error Label</string>
        </property>
       </widget>
      </item>
+
      <item row="0" column="1">
       <widget class="QLineEdit" name="leUsername"/>
      </item>
+
      <item row="1" column="1">
       <widget class="QLineEdit" name="lePassword">
        <property name="echoMode">
@@ -69,6 +85,11 @@
        </property>
       </widget>
      </item>
+
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="leRootAccount"/>
+     </item>
+
     </layout>
    </item>
    <item row="2" column="1">

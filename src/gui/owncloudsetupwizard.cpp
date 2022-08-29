@@ -43,8 +43,8 @@ OwncloudSetupWizard::OwncloudSetupWizard(QObject* parent) :
 {
     connect( _ocWizard, SIGNAL(determineAuthType(const QString&)),
              this, SLOT(slotDetermineAuthType(const QString&)));
-    connect( _ocWizard, SIGNAL(connectToOCUrl( const QString& ) ),
-             this, SLOT(slotConnectToOCUrl( const QString& )));
+    connect( _ocWizard, SIGNAL(connectToOCUrl( const QString&, const QString& ) ),
+             this, SLOT(slotConnectToOCUrl( const QString&, const QString& )));
     connect( _ocWizard, SIGNAL(createLocalAndRemoteFolders(QString, QString)),
              this, SLOT(slotCreateLocalAndRemoteFolders(QString, QString)));
     /* basicSetupFinished might be called from a reply from the network.
@@ -185,14 +185,15 @@ void OwncloudSetupWizard::slotNoOwnCloudFoundAuthTimeout(const QUrl&url)
                                  url.toString()), false);
 }
 
-void OwncloudSetupWizard::slotConnectToOCUrl( const QString& url )
+void OwncloudSetupWizard::slotConnectToOCUrl( const QString& url, const QString& user )
 {
     QString dav_path("/");
     qDebug() << "Connect to url: " << url;
     AbstractCredentials *creds = _ocWizard->getCredentials();
     _ocWizard->account()->setCredentials(creds);
-    dav_path.append(creds->user());
+    dav_path.append(user);
     _ocWizard->account()->setDavPath(dav_path);
+    _ocWizard->account()->setUser(user);
     _ocWizard->setField(QLatin1String("OCUrl"), url );
     _ocWizard->appendToConfigurationLog(tr("Trying to connect to %1 at %2...")
                                         .arg( Theme::instance()->appNameGUI() ).arg(url) );

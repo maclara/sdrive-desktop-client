@@ -75,7 +75,7 @@ public slots:
 signals:
     void clearPendingRequests();
     void determineAuthType(const QString&);
-    void connectToOCUrl( const QString& );
+    void connectToOCUrl( const QString&, const QString& );
     void createLocalAndRemoteFolders(const QString&, const QString&);
     // make sure to connect to this, rather than finished(int)!!
     void basicSetupFinished( int );

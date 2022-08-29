@@ -42,7 +42,7 @@ public:
   void setConfigExists(bool config);
 
 Q_SIGNALS:
-  void connectToOCUrl(const QString&);
+  void connectToOCUrl(const QString&, const QString&);
 
 private:
   void startSpinner();
