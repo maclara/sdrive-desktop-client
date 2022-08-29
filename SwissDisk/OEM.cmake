@@ -20,4 +20,4 @@ set( CRASHREPORTER_ICON ":/swissdisk-icon.png" )
 set( MIRALL_VERSION_SUFFIX "" )
 
 # Update this with every release
-set( MIRALL_VERSION_BUILD "0" )
+set( MIRALL_VERSION_BUILD "1" )
