@@ -1,4 +1,1 @@
-.vagrant/*
-build/*
-install/*
-!*.sh
+build/**
