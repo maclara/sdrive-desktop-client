@@ -1,29 +1,38 @@
 #!/bin/bash -ex
 
+QT_LOC="/opt/homebrew/opt/qt@5"
+QTK_LOC="/opt/homebrew/opt/qtkeychain"
+SPARKLE="/opt/homebrew/Caskroom/sparkle/2.6.4"
+
 SDIR="`pwd`/../.."
 BDIR="`pwd`/build"
+IDIR="$SDIR/SwissDisk/install"
+ADIR="$IDIR/SwissDisk.app/Contents"
 
 rm -rf "$BDIR"
-mkdir -p "$BDIR"
+rm -rf "$IDIR"
 
+mkdir -p "$BDIR"
 cd "$BDIR"
 
-QT_LOC="$HOME/Qt5.6.3/5.6.3/clang_64"
-
 export PATH="$QT_LOC/bin:$PATH"
-export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
 
-cmake -DOEM_THEME_DIR="$SDIR/SwissDisk" -DCMAKE_INSTALL_PREFIX=../../install "$SDIR"
+cmake -DOEM_THEME_DIR="$SDIR/SwissDisk" -DCMAKE_INSTALL_PREFIX="$IDIR" \
+	-DCMAKE_MODULE_PATH="$QTK_LOC/lib/cmake" -DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_FRAMEWORK_PATH="$SPARKLE;$QT_LOC/lib" -DQT_IS_STATIC=YES \
+	"$SDIR"
 
-make -j6
+make VERBOSE=1 -j6
 
 make install
 
-rm -rf ../../install/Library/Frameworks
-mkdir -p ../../install/Library/Frameworks
-cp -a $QT_LOC/lib/Qt{Sql,Widgets,Network,Xml,MacExtras,Gui,Core}.framework ../../install/Library/Frameworks/
-rm -rf ../../install/Library/Frameworks/*.framework/Versions/5/Headers
-rm -f ../../install/Library/Frameworks/*.framework/Versions/5/*_debug*
-
-./admin/osx/create_mac.sh ../../install . 
+./admin/osx/create_mac.sh "$IDIR" .
 #'3rd Party Mac Developer Installer: maClara, LLC (53R32TQWB6)'
+
+sign="codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime"
+
+$sign $ADIR/Frameworks/*
+$sign $ADIR/PlugIns/*/*
+$sign $ADIR/MacOS/*
+$sign $ADIR/..
+

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-cmake_policy(VERSION 2.8.0)
+cmake_minimum_required(VERSION 3.10)
+cmake_policy(VERSION 3.10)
 
 project(client)
 
@@ -154,7 +154,7 @@ if(NOT TOKEN_AUTH_ONLY)
 endif()
 
 if(APPLE)
-  find_package(Sparkle)
+  find_package(Sparkle REQUIRED)
 endif(APPLE)
 
 if(UNIX)
@@ -192,7 +192,7 @@ set(TRANSLATIONS ${TRANS_FILES})
 add_subdirectory(csync)
 add_subdirectory(src)
 if(NOT BUILD_LIBRARIES_ONLY)
-add_subdirectory(shell_integration)
+# add_subdirectory(shell_integration)
 add_subdirectory(doc)
 add_subdirectory(admin)
 endif(NOT BUILD_LIBRARIES_ONLY)

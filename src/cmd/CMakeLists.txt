@@ -23,7 +23,7 @@ if(NOT BUILD_LIBRARIES_ONLY)
 	set_target_properties(${cmd_NAME} PROPERTIES
 	        RUNTIME_OUTPUT_DIRECTORY  ${BIN_OUTPUT_DIRECTORY} )
         set_target_properties(${cmd_NAME} PROPERTIES
-		INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/${APPLICATION_EXECUTABLE}" )
+		INSTALL_RPATH "@executable_path/" )
 
 	target_link_libraries(${cmd_NAME} ${synclib_NAME})
 endif()
@@ -45,7 +45,7 @@ endif()
 if(BUILD_OWNCLOUD_OSX_BUNDLE AND NOT BUILD_LIBRARIES_ONLY)
    get_target_property (QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
    install(CODE "
-    message(STATUS \"Deploying (Qt) dependencies and fixing library pathes...\")
+    message(STATUS \"Deploying (Qt) dependencies and fixing library paths...\")
     execute_process(COMMAND \"${CMAKE_SOURCE_DIR}/admin/osx/macdeployqt.py\" ${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE} ${QT_QMAKE_EXECUTABLE})
     " COMPONENT RUNTIME)
 endif()

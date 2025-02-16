@@ -354,6 +354,7 @@ function(install_qt5_executable executable)
 qtcore_type)
         endif()
         if(qtcore_type STREQUAL "system")
+		message(INFO "QtCore is system, not installing")
                 set(qt_plugins_dir "")
         endif()
 

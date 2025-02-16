@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #  This file is part of ownCloud.
 #  It was inspired in large part by the macdeploy script in Clementine
 #  and Tomahawk
@@ -18,34 +18,31 @@
 import os
 import re
 import subprocess
-import commands
 import sys
 from glob import glob
 
 def QueryQMake(attrib):
-    return subprocess.check_output([qmake_path, '-query', attrib]).rstrip('\n')
+    return subprocess.check_output([qmake_path, '-query', attrib]).rstrip(b"\n")
 
-FRAMEWORK_SEARCH_PATH=[
-    '/Library/Frameworks',
-    os.path.join(os.environ['HOME'], 'Library/Frameworks')
+FRAMEWORK_SEARCH_PATH = [
+        '/opt/homebrew/Caskroom/sparkle/2.6.4',
+        '/Library/Frameworks',
+        '.'
 ]
 
-LIBRARY_SEARCH_PATH=['/usr/local/lib', '.']
+LIBRARY_SEARCH_PATH = ['/usr/local/lib', '.']
 
 QT_PLUGINS = [
     'sqldrivers/libqsqlite.dylib',
     'platforms/libqcocoa.dylib',
     'imageformats/libqgif.dylib',
     'imageformats/libqico.dylib',
+    'imageformats/libqicns.dylib',
     'imageformats/libqjpeg.dylib',
     'imageformats/libqsvg.dylib',
-    'imageformats/libqmng.dylib',
 ]
 
-QT_PLUGINS_SEARCH_PATH=[
-#    os.path.join(os.environ['QTDIR'], 'plugins'),
-    '/usr/local/Cellar/qt/5.2.1/plugins',
-]
+QT_PLUGINS_SEARCH_PATH=[]
 
 
 class Error(Exception):
@@ -71,7 +68,7 @@ class CouldNotFindFrameworkError(Error):
   pass
 
 if len(sys.argv) < 3:
-  print 'Usage: %s <bundle.app> <path-to-qmake>' % sys.argv[0]
+  print('Usage: %s <bundle.app> <path-to-qmake>' % sys.argv[0])
   exit()
 
 def is_exe(fpath):
@@ -97,31 +94,43 @@ fixed_libraries = []
 fixed_frameworks = []
 
 def WriteQtConf():
-  print "Writing qt.conf..."
+  print("Writing qt.conf...")
   with open(os.path.join(resources_dir, 'qt.conf'), 'w') as f:
     f.write("[Paths]\nPlugins = PlugIns\n");
     f.close()
 
 def GetBrokenLibraries(binary):
-  #print "Checking libs for binary: %s" % binary
+  print("Checking libs for binary: %s" % binary)
   output = subprocess.Popen(['otool', '-L', binary], stdout=subprocess.PIPE).communicate()[0]
   broken_libs = {
       'frameworks': [],
       'libs': []}
-  for line in [x.split(' ')[0].lstrip() for x in output.split('\n')[1:]]:
-    #print "Checking line: %s" % line
-    if not line:  # skip empty lines
+  for line in [x.split(b" ")[0].lstrip() for x in output.split(b"\n")[1:]]:
+    line = line.decode("utf-8")
+    #print("Checking line: %s" % line)
+    if not line: # skip empty lines
+      #print("Skipping")
       continue
     if os.path.basename(binary) == os.path.basename(line):
-      #print "mnope %s-%s" % (os.path.basename(binary), os.path.basename(line))
+      #print("mnope %s-%s" % (os.path.basename(binary), os.path.basename(line)))
       continue
-    if re.match(r'^\s*/System/', line):
+    if re.match(r"^\s*/System/", line):
       continue  # System framework
     elif re.match(r'^\s*/usr/lib/', line):
-      #print "unix style system lib"
+      #print("unix style system lib")
       continue  # unix style system library
     elif re.match(r'Breakpad', line):
-      continue  # Manually added by cmake.
+      continue # Manually added by cmake.
+    elif re.match(r'^\s*@rpath', line):
+      if '.framework' in line:
+        relative_path = os.path.join(*line.split('/')[-4:])
+        if not os.path.exists(os.path.join(frameworks_dir, relative_path)):
+          broken_libs['frameworks'].append(line)
+      else:
+        relative_path = os.path.join(*line.split('/')[1:])
+        if not os.path.exists(os.path.join(binary_dir, relative_path)):
+          broken_libs['libs'].append(line)
+      continue
     elif re.match(r'^\s*@executable_path', line) or re.match(r'^\s*@loader_path', line):
       # Potentially already fixed library
       if '.framework' in line:
@@ -130,10 +139,11 @@ def GetBrokenLibraries(binary):
           broken_libs['frameworks'].append(relative_path)
       else:
         relative_path = os.path.join(*line.split('/')[1:])
-        #print "RELPATH %s %s" % (relative_path, os.path.join(binary_dir, relative_path))
+        #print("RELPATH %s %s" % (relative_path, os.path.join(binary_dir, relative_path)))
         if not os.path.exists(os.path.join(binary_dir, relative_path)):
           broken_libs['libs'].append(relative_path)
     elif re.search(r'\w+\.framework', line):
+      #print("Broken framework: %s" % line)
       broken_libs['frameworks'].append(line)
     else:
       broken_libs['libs'].append(line)
@@ -141,10 +151,24 @@ def GetBrokenLibraries(binary):
   return broken_libs
 
 def FindFramework(path):
+  #print("Findng Framework:", path)
   search_pathes = FRAMEWORK_SEARCH_PATH
   search_pathes.insert(0, QueryQMake('QT_INSTALL_LIBS'))
+
+  if '@rpath' in path:
+    if '.framework' in path:
+      relative_path = os.path.join(*path.split('/')[-4:])
+    else:
+      relative_path = os.path.join(*path.split('/')[1:])
+  else:
+    relative_path = path
+
+  print("Findng Framework:", path)
+
   for search_path in search_pathes:
-    abs_path = os.path.join(search_path, path)
+    if isinstance(search_path, bytes):
+      search_path = search_path.decode("utf-8")
+    abs_path = os.path.join(search_path, relative_path)
     if os.path.exists(abs_path):
       return abs_path
 
@@ -183,7 +207,10 @@ def FixFramework(path):
   FixAllLibraries(broken_libs)
 
   new_path = CopyFramework(abs_path)
-  id = os.sep.join(new_path.split(os.sep)[3:])
+  if not new_path:
+    return
+
+  id = os.sep.join(new_path.split(os.sep)[-4:])
   FixFrameworkId(new_path, id)
   for framework in broken_libs['frameworks']:
     FixFrameworkInstallPath(framework, new_path)
@@ -197,7 +224,7 @@ def FixLibrary(path):
     fixed_libraries.append(path)
   abs_path = FindLibrary(path)
   if abs_path == "":
-    print "Could not resolve %s, not fixing!" % path
+    print("Could not resolve %s, not fixing!" % path)
     return
   broken_libs = GetBrokenLibraries(abs_path)
   FixAllLibraries(broken_libs)
@@ -214,6 +241,7 @@ def FixPlugin(abs_path, subdir):
   FixAllLibraries(broken_libs)
 
   new_path = CopyPlugin(abs_path, subdir)
+  FixPlugInId(new_path)
   for framework in broken_libs['frameworks']:
     FixFrameworkInstallPath(framework, new_path)
   for library in broken_libs['libs']:
@@ -229,7 +257,7 @@ def FixBinary(path):
 
 def CopyLibrary(path):
   new_path = os.path.join(binary_dir, os.path.basename(path))
-  args = ['ditto', '--arch=x86_64', path, new_path]
+  args = ['ditto', '--arch=x86_64', '--arch=arm64', path, new_path]
   commands.append(args)
   args = ['chmod', 'u+w', new_path]
   commands.append(args)
@@ -239,7 +267,7 @@ def CopyPlugin(path, subdir):
   new_path = os.path.join(plugins_dir, subdir, os.path.basename(path))
   args = ['mkdir', '-p', os.path.dirname(new_path)]
   commands.append(args)
-  args = ['ditto', '--arch=x86_64', path, new_path]
+  args = ['ditto', '--arch=x86_64', '--arch=arm64', path, new_path]
   commands.append(args)
   args = ['chmod', 'u+w', new_path]
   commands.append(args)
@@ -247,30 +275,46 @@ def CopyPlugin(path, subdir):
 
 def CopyFramework(path):
   parts = path.split(os.sep)
-  print "CopyFramework:", path
+  print("CopyFramework:", path)
   for i, part in enumerate(parts):
     matchObj = re.match(r'(\w+\.framework)', part)
     if matchObj:
       full_path = os.path.join(frameworks_dir, *parts[i:-1])
       framework = matchObj.group(1)
       break
+  if os.path.exists(full_path):
+    return None
+
   args = ['mkdir', '-p', full_path]
   commands.append(args)
-  args = ['ditto', '--arch=x86_64', path, full_path]
+  args = ['ditto', '--arch=x86_64', '--arch=arm64', path, full_path]
   commands.append(args)
   args = ['chmod', 'u+w', os.path.join(full_path, parts[-1])]
   commands.append(args)
-  args = ['chmod', 'u+w', os.path.join(frameworks_dir, framework, "Resources")]
+  args = ['ln', '-sf', os.path.join('Versions', 'Current', parts[-1]),
+          os.path.join(full_path, '..', '..', parts[-1])]
+  commands.append(args)
+  args = ['ln', '-sf', parts[-2], os.path.join(full_path, '..', 'Current')]
   commands.append(args)
 
-  info_plist = os.path.join(os.path.split(path)[0], '..', '..', 'Contents', 'Info.plist')
+  this_resource = os.path.join(frameworks_dir, framework, 'Versions', 'Current', "Resources")
+  info_plist = os.path.join(os.path.split(path)[0], 'Resources', 'Info.plist')
   if os.path.exists(info_plist):
-    args = ['cp', '-r', info_plist, os.path.join(frameworks_dir, framework, "Resources")]
+    args = ['mkdir', '-p', this_resource]
     commands.append(args)
+    args = ['chmod', 'u+w', this_resource]
+    commands.append(args)
+    args = ['cp', '-af', info_plist, this_resource]
+    commands.append(args)
+    args = ['ln', '-sf', os.path.join('Versions', 'Current', 'Resources'),
+          os.path.join(full_path, '..', '..', 'Resources')]
+    commands.append(args)
+
   return os.path.join(full_path, parts[-1])
 
 def FixId(path, library_name):
-  id = '@executable_path/../Frameworks/%s' % library_name
+  print("FixId:", library_name)
+  id = '@rpath/%s' % library_name
   args = ['install_name_tool', '-id', id, path]
   commands.append(args)
 
@@ -278,10 +322,16 @@ def FixLibraryId(path):
   library_name = os.path.basename(path)
   FixId(path, library_name)
 
+def FixPlugInId(path):
+  library_name = '../PlugIns/%s' % os.path.join(*path.split('/')[-2:])
+  FixId(path, library_name)
+
 def FixFrameworkId(path, id):
+  id = '../Frameworks/%s' % id
   FixId(path, id)
 
 def FixInstallPath(library_path, library, new_path):
+  print("FixInstallPath:", library_path, new_path, library)
   args = ['install_name_tool', '-change', library_path, new_path, library]
   commands.append(args)
 
@@ -295,7 +345,7 @@ def FindSystemLibrary(library_name):
 def FixLibraryInstallPath(library_path, library):
   system_library = FindSystemLibrary(os.path.basename(library_path))
   if system_library is None:
-    new_path = '@executable_path/../MacOS/%s' % os.path.basename(library_path)
+    new_path = '@rpath/%s' % os.path.basename(library_path)
     FixInstallPath(library_path, library, new_path)
   else:
     FixInstallPath(library_path, library, system_library)
@@ -306,13 +356,17 @@ def FixFrameworkInstallPath(library_path, library):
     if re.match(r'\w+\.framework', part):
       full_path = os.path.join(*parts[i:])
       break
-  new_path = '@executable_path/../Frameworks/%s' % full_path
+  new_path = '@rpath/../Frameworks/%s' % full_path
   FixInstallPath(library_path, library, new_path)
 
 def FindQtPlugin(name):
+  if isinstance(name, bytes):
+    name = name.decode("utf-8")
   search_path = QT_PLUGINS_SEARCH_PATH
   search_path.insert(0, QueryQMake('QT_INSTALL_PLUGINS'))
   for path in search_path:
+    if isinstance(path, bytes):
+      path = path.decode("utf-8")
     if os.path.exists(path):
       if os.path.exists(os.path.join(path, name)):
         return os.path.join(path, name)
@@ -324,13 +378,8 @@ for binary in binaries:
 for plugin in QT_PLUGINS:
   FixPlugin(FindQtPlugin(plugin), os.path.dirname(plugin))
 
-if len(sys.argv) <= 2:
-  print 'Will run %d commands:' % len(commands)
-  for command in commands:
-    print ' '.join(command)
-
 for command in commands:
-  p = subprocess.Popen(command)
-  os.waitpid(p.pid, 0)
+  print(' '.join(command))
+  subprocess.run(command)
 
 WriteQtConf()
