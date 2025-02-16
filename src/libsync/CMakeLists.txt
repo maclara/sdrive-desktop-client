@@ -157,8 +157,8 @@ set_target_properties( ${synclib_NAME}  PROPERTIES
 	SOVERSION ${MIRALL_SOVERSION}
 	RUNTIME_OUTPUT_DIRECTORY ${BIN_OUTPUT_DIRECTORY}
 )
-set_target_properties( ${synclib_NAME} PROPERTIES
-	INSTALL_RPATH "@executable_path/" )
+#set_target_properties( ${synclib_NAME} PROPERTIES
+#	INSTALL_RPATH "@executable_path/" )
 
 target_link_libraries(${synclib_NAME} ${libsync_LINK_TARGETS} )
 
@@ -182,6 +182,11 @@ if(NOT BUILD_OWNCLOUD_OSX_BUNDLE)
     )
 else()
     install(TARGETS ${synclib_NAME} DESTINATION ${OWNCLOUD_OSX_BUNDLE}/Contents/MacOS)
+    if (SPARKLE_FOUND)
+	install(DIRECTORY "${SPARKLE_LIBRARY}"
+		DESTINATION "${OWNCLOUD_OSX_BUNDLE}/Contents/Frameworks"
+		USE_SOURCE_PERMISSIONS)
+    endif (SPARKLE_FOUND)
 endif()
 
 

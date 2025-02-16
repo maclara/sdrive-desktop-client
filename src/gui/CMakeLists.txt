@@ -225,9 +225,8 @@ set_target_properties( ${APPLICATION_EXECUTABLE} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY  ${BIN_OUTPUT_DIRECTORY}
 )
 # Only relevant for Linux? On OS X it by default properly checks in the bundle directory next to the exe
-set_target_properties( ${APPLICATION_EXECUTABLE} PROPERTIES
-	INSTALL_RPATH "@executable_path/../Frameworks"
-	INSTALL_RPATH "@executable_path/")
+#set_target_properties( ${APPLICATION_EXECUTABLE} PROPERTIES
+#	INSTALL_RPATH "@executable_path/../Frameworks")
 
 target_link_libraries( ${APPLICATION_EXECUTABLE} ${QT_LIBRARIES} )
 target_link_libraries( ${APPLICATION_EXECUTABLE} ${synclib_NAME} )
@@ -250,19 +249,6 @@ install(TARGETS ${APPLICATION_EXECUTABLE}
         ARCHIVE DESTINATION lib
         BUNDLE  DESTINATION "."
  )
-
-
-# FIXME: The following lines are dup in src/gui and src/cmd because it needs to be done after both are installed
-#FIXME: find a nice solution to make the second if(BUILD_OWNCLOUD_OSX_BUNDLE) unnecessary
-# currently it needs to be done because the code right above needs to be executed no matter
-# if building a bundle or not and the install_qt4_executable needs to be called afterwards
-if(BUILD_OWNCLOUD_OSX_BUNDLE AND NOT BUILD_LIBRARIES_ONLY)
-   get_target_property (QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-   install(CODE "
-    message(STATUS \"Deploying (Qt) dependencies and fixing library paths...\")
-    execute_process(COMMAND \"${CMAKE_SOURCE_DIR}/admin/osx/macdeployqt.py\" ${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE} ${QT_QMAKE_EXECUTABLE})
-    " COMPONENT RUNTIME)
-endif()
 
 if(NOT BUILD_OWNCLOUD_OSX_BUNDLE AND NOT WIN32)
     configure_file(${CMAKE_SOURCE_DIR}/mirall.desktop.in

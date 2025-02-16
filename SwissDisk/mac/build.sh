@@ -19,14 +19,23 @@ export PATH="$QT_LOC/bin:$PATH"
 
 cmake -DOEM_THEME_DIR="$SDIR/SwissDisk" -DCMAKE_INSTALL_PREFIX="$IDIR" \
 	-DCMAKE_MODULE_PATH="$QTK_LOC/lib/cmake" -DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_FRAMEWORK_PATH="$SPARKLE;$QT_LOC/lib" \
+	-DCMAKE_FRAMEWORK_PATH="$SPARKLE;$QT_LOC/lib" -DCMAKE_SKIP_RPATH=TRUE \
 	"$SDIR"
 
 make -j6
 
 make install
 
-codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime \
-	--deep $ADIR/..
+install_name_tool \
+	-add_rpath @executable_path/ \
+	-add_rpath @executable_path/../Frameworks/ \
+	$ADIR/MacOS/SwissDisk
+
+install_name_tool \
+	-add_rpath @executable_path/ \
+	-add_rpath @executable_path/../Frameworks/ \
+	$ADIR/MacOS/SwissDiskcmd
+
+macdeployqt $ADIR/.. -codesign=-
 
 ./admin/osx/create_mac.sh "$IDIR" .

@@ -52,7 +52,7 @@ namespace Utility
      * @param unit an optional unit that is appended if present.
      * @return the formatted string.
      */
-    OWNCLOUDSYNC_EXPORT QString compactFormatDouble(double value, int prec, const QString& unit = QString::null);
+    OWNCLOUDSYNC_EXPORT QString compactFormatDouble(double value, int prec, const QString& unit = QString());
 
     // porting methods
     OWNCLOUDSYNC_EXPORT QString escape(const QString&);
