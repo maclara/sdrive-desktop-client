@@ -1,11 +1,10 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --sourcedirectory="$(PWD)/../.." --builddirectory="$(PWD)/build"
+	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure --buildsystem=cmake -- \
-		-DOEM_THEME_DIR="$(PWD)/.."
+	dh_auto_configure -- -DOEM_THEME_DIR="$(PWD)/SwissDisk"
 
 override_dh_install:
 	dh_install
