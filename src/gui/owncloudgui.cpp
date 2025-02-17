@@ -124,7 +124,7 @@ void ownCloudGui::setupOverlayIcons()
           QByteArray result = p.readAll();
           QString resultAsString(result); // if appropriate
           qDebug() << "Laod Finder Overlay-Plugin: " << resultAsString << ": " << p.exitCode()
-                   << (p.exitCode() != 0 ? p.errorString() : QString::null);
+                   << (p.exitCode() != 0 ? p.errorString() : QString());
     } else  {
         qDebug() << finderExtension << "does not exist! Finder Overlay Plugin loading failed";
     }

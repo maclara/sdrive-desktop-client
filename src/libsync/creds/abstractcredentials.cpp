@@ -36,11 +36,11 @@ QString AbstractCredentials::keychainKey(const QString &url, const QString &user
     QString u(url);
     if( u.isEmpty() ) {
         qDebug() << "Empty url in keyChain, error!";
-        return QString::null;
+        return QString();
     }
     if( user.isEmpty() ) {
         qDebug() << "Error: User is empty!";
-        return QString::null;
+        return QString();
     }
 
     if( !u.endsWith(QChar('/')) ) {

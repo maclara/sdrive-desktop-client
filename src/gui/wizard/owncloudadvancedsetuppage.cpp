@@ -213,7 +213,7 @@ QStringList OwncloudAdvancedSetupPage::selectiveSyncBlacklist() const
 bool OwncloudAdvancedSetupPage::validatePage()
 {
     if(!_created) {
-        setErrorString(QString::null);
+        setErrorString(QString());
         _checking = true;
         startSpinner();
         emit completeChanged();

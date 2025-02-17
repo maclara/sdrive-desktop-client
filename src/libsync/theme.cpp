@@ -202,7 +202,7 @@ QString Theme::defaultServerFolder() const
 
 QString Theme::overrideServerUrl() const
 {
-    return QString::null;
+    return QString();
 }
 
 QString Theme::defaultClientFolder() const

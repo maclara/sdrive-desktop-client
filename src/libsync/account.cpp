@@ -38,7 +38,6 @@ namespace OCC {
 static const char urlC[] = "url";
 static const char authTypeC[] = "authType";
 static const char userC[] = "user";
-static const char httpUserC[] = "http_user";
 static const char caCertsKeyC[] = "CaCertificates";
 
 AccountManager *AccountManager::_instance = 0;

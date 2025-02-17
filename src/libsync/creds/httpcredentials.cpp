@@ -303,7 +303,7 @@ void HttpCredentials::slotReadJobDone(QKeychain::Job *job)
                 _ready = true;
                 persist();
             } else {
-                _password = QString::null;
+                _password = QString();
                 _ready = false;
             }
             emit fetched();

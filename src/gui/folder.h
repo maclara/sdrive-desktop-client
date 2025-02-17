@@ -206,7 +206,7 @@ private:
     void checkLocalPath();
 
     void createGuiLog(const QString& filename, SyncFileStatus status, int count,
-                       const QString& renameTarget = QString::null );
+                       const QString& renameTarget = QString() );
 
     AccountState* _accountState;
     QString   _path;

@@ -110,7 +110,7 @@ public:
     /**
     * URL to help file
     */
-    virtual QString helpUrl() const { return QString::null; }
+    virtual QString helpUrl() const { return QString(); }
 
     /**
      * Setting a value here will pre-define the server url.
@@ -132,7 +132,7 @@ public:
     /**
      * Override to encforce a particular locale, i.e. "de" or "pt_BR"
      */
-    virtual QString enforcedLocale() const { return QString::null; }
+    virtual QString enforcedLocale() const { return QString(); }
 
     /** colored, white or black */
     QString systrayIconFlavor(bool mono) const;

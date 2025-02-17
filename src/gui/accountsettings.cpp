@@ -580,7 +580,7 @@ QString AccountSettings::shortenFilename( const QString& folder, const QString& 
     // strip off the server prefix from the file name
     QString shortFile(file);
     if( shortFile.isEmpty() ) {
-        return QString::null;
+        return QString();
     }
 
     if(shortFile.startsWith(QLatin1String("ownclouds://")) ||

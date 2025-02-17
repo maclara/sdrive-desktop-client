@@ -164,7 +164,7 @@ void OwncloudWizard::slotCurrentPageChanged( int id )
     if( id == WizardCommon::Page_Result ) {
         disconnect(this, SIGNAL(finished(int)), this, SIGNAL(basicSetupFinished(int)));
         emit basicSetupFinished(QDialog::Accepted);
-        appendToConfigurationLog( QString::null );
+        appendToConfigurationLog( QString() );
     }
 
     setOption(QWizard::HaveCustomButton1, id == WizardCommon::Page_AdvancedSetup);

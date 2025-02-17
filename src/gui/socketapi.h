@@ -74,7 +74,7 @@ private:
     SqlQuery *getSqlQuery( Folder *folder );
 
     void sendMessage(SocketType* socket, const QString& message, bool doWait = false);
-    void broadcastMessage(const QString& verb, const QString &path, const QString &status = QString::null, bool doWait = false);
+    void broadcastMessage(const QString& verb, const QString &path, const QString &status = QString(), bool doWait = false);
 
     Q_INVOKABLE void command_RETRIEVE_FOLDER_STATUS(const QString& argument, SocketType* socket);
     Q_INVOKABLE void command_RETRIEVE_FILE_STATUS(const QString& argument, SocketType* socket);

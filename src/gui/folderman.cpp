@@ -515,7 +515,7 @@ void FolderMan::setSyncEnabled( bool enabled )
     }
     _syncEnabled = enabled;
     // force a redraw in case the network connect status changed
-    emit( folderSyncStateChange(QString::null) );
+    emit( folderSyncStateChange(QString()) );
 }
 
 void FolderMan::startScheduledSyncSoon(qint64 msMinimumDelay)
@@ -800,7 +800,7 @@ QString FolderMan::getBackupName( QString fullPathName ) const
     if (fullPathName.endsWith("/"))
         fullPathName.chop(1);
 
-    if( fullPathName.isEmpty() ) return QString::null;
+    if( fullPathName.isEmpty() ) return QString();
 
      QString newName = fullPathName + QLatin1String(".oC_bak");
      QFileInfo fi( newName );

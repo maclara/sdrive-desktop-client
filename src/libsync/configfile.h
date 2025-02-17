@@ -48,7 +48,7 @@ public:
     QByteArray caCerts();
     void setCaCerts( const QByteArray& );
 
-    bool passwordStorageAllowed(const QString &connection = QString::null );
+    bool passwordStorageAllowed(const QString &connection = QString() );
 
     QString ownCloudVersion() const;
     void setOwnCloudVersion( const QString& );
@@ -129,7 +129,7 @@ protected:
     bool dataExists(const QString& group, const QString& key) const;
 
 private:
-    QVariant getValue(const QString& param, const QString& group = QString::null,
+    QVariant getValue(const QString& param, const QString& group = QString(),
                       const QVariant& defaultValue = QVariant()) const;
     void setValue(const QString& key, const QVariant &value);
 

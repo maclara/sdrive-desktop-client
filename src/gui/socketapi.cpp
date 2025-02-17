@@ -233,7 +233,7 @@ void SocketApi::slotUnregisterPath( const QString& alias )
 {
     Folder *f = FolderMan::instance()->folder(alias);
     if (f) {
-        broadcastMessage(QLatin1String("UNREGISTER_PATH"), f->path(), QString::null, true );
+        broadcastMessage(QLatin1String("UNREGISTER_PATH"), f->path(), QString(), true );
 
         if( _dbQueries.contains(f)) {
             SqlQuery *h = _dbQueries[f];

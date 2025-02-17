@@ -71,7 +71,7 @@ bool OwncloudWizardResultPage::isComplete() const
 
 void OwncloudWizardResultPage::initializePage()
 {
-    _ui.localFolderLabel->setText( QString::null );
+    _ui.localFolderLabel->setText( QString() );
 }
 
 void OwncloudWizardResultPage::setRemoteFolder(const QString &remoteFolder)
@@ -82,7 +82,7 @@ void OwncloudWizardResultPage::setRemoteFolder(const QString &remoteFolder)
 void OwncloudWizardResultPage::setupCustomization()
 {
     // set defaults for the customize labels.
-    _ui.topLabel->setText( QString::null );
+    _ui.topLabel->setText( QString() );
     _ui.topLabel->hide();
 
     QVariant variant = Theme::instance()->customMedia( Theme::oCSetupResultTop );

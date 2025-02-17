@@ -25,7 +25,7 @@ class NetrcParser
 public:
     typedef QPair<QString, QString> LoginPair;
 
-    NetrcParser(const QString &fileName = QString::null);
+    NetrcParser(const QString &fileName = QString());
     bool parse();
     LoginPair find(const QString &machine);
 
