@@ -31,8 +31,8 @@
         <key>SUShowReleaseNotes</key>
         <false/>
         <key>LSMinimumBundleVersion</key>
-        <string>12.0.0</string>
-        <key>SUPublicDSAKeyFile</key>
-        <string>dsa_pub.pem</string>
+	<string>12.0.0</string>
+	<key>SUPublicEDKey</key>
+	<string>krcFD1xioWjp2tqk7rZCBKVv3qRxXw3fXXlfNH7S3V8=</string>
 </dict>
 </plist>

@@ -25,9 +25,10 @@ prjfile=$build_path/admin/osx/macosx.pkgproj
 # The name of the installer package
 installer="@APPLICATION_NAME@-@MIRALL_VERSION_FULL@@MIRALL_VERSION_SUFFIX@"
 installer_file="$installer.pkg"
-installer_file_tar="$installer.pkg.tar"
-installer_file_tar_bz2="$installer.pkg.tar.bz2"
-installer_file_tbz="$installer.pkg.tbz"
+app_dir="@APPLICATION_NAME@.app"
+app_dir_tar="$installer.tar"
+app_dir_tar_bz2="$installer.tar.bz2"
+app_dir_tbz="$installer.tbz"
 
 # set the installer name to the copied prj config file
 /usr/local/bin/packagesutil --file $prjfile set project name "$installer"
@@ -62,13 +63,13 @@ fi
 
 # Sparkle wants a tbz, it cannot install raw pkg
 cd $install_path
-tar cf "$installer_file_tar" "$installer_file"
-bzip2 -9 "$installer_file_tar"
-mv "$installer_file_tar_bz2" "$installer_file_tbz"
+tar cf "$app_dir_tar" "$app_dir"
+bzip2 -9 "$app_dir_tar"
+mv "$app_dir_tar_bz2" "$app_dir_tbz"
 rc=$?
 if [ $rc == 0 ]; then
-  echo "Successfully created $installer_file"
+  echo "Successfully created $app_dir_tbz"
 else
-  echo "Failed to create $installer_file"
+  echo "Failed to create $app_dir_tbz"
   exit 3
 fi

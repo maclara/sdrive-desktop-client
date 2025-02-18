@@ -3,7 +3,7 @@ set( APPLICATION_EXECUTABLE "SwissDisk" )
 set( APPLICATION_DOMAIN     "swissdisk.com" )
 set( APPLICATION_VENDOR     "maClara, LLC" )
 
-set( APPLICATION_UPDATE_URL "https://disk.swissdisk.com/files/"
+set( APPLICATION_UPDATE_URL "https://disk.swissdisk.com/files/updates/client.xml"
 	CACHE STRING "URL for updater" )
 
 set( THEME_CLASS            "SwissDiskTheme" )
@@ -25,4 +25,4 @@ set( CRASHREPORTER_ICON ":/swissdisk-icon.png" )
 set( MIRALL_VERSION_SUFFIX "" )
 
 # Update this with every release
-set( MIRALL_VERSION_BUILD "2" )
+set( MIRALL_VERSION_BUILD "3" )
